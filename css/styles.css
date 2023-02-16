@@ -1,47 +1,66 @@
-nav {
-    display: flex;
-    padding: 2px 6px;
-    justify-content: space-between;
-    align-items: center;
+body {
+    margin: 0;
 }
 
-.nav-logo {
-    padding: 4px 0px;
+.nav-bar {
+    padding: 7px 6px;
+    background-color: deepskyblue;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
 }
 
 .nav-logo img {
-    width: 50%;
+    width: 15vw;
+}
+
+nav {
+    flex: 1;
 }
 
 .nav-links {
-    flex: 1;
-    font-size: 30px;
-}
-
-.nav-links ul li {
     list-style: none;
-    display: inline-block;
-    padding-inline: 6px;
-}
+    margin: 0;
+    padding: 0;
 
-.contacts{
-    align-items: center;
-    text-align: center;
-    background-color: deepskyblue;
-    min-height: 10%;
-}
-
-.contacts ul{
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.contacts ul li {
+.content-wrapper {
+margin: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+}
+
+.content{
+    flex: 1;
+    padding: 1rem;
+    border-radius: 30px;
+    background-color: deepskyblue;
+}
+
+.contacts-list{
     list-style: none;
-    flex: 1;   
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
 }
 
-.contacts ul li a img {
+.contacts-list li a img {
     width: 44px;
     height: 44px;
 }
