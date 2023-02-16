@@ -1,19 +1,18 @@
 body {
     margin: 0;
+    background-color: #370617;
 }
 
 .nav-bar {
+    min-height: 2rem;
     padding: 7px 6px;
-    background-color: deepskyblue;
+    background-color: #6a040f;
 
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 2rem;
-}
-
-.nav-logo img {
-    width: 15vw;
+    color: #EAF9D9;
 }
 
 nav {
@@ -33,20 +32,49 @@ nav {
 }
 
 .content-wrapper {
-margin: 2rem;
+    margin: 6vh 10vw;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
     gap: 2rem;
+    font-size: large;
 }
 
-.content{
+.content-body {
     flex: 1;
     padding: 1rem;
     border-radius: 30px;
-    background-color: deepskyblue;
+    background-color: #9F8082;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-image-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    align-items: center;
+}
+
+.content-image-wrapper img{
+    flex: 1;
+}
+
+.content img {
+    flex: 1;
+    width: 32vmin;
+    height: auto;
+}
+
+.content p {
+    flex: 1;
 }
 
 .contacts-list{
@@ -57,10 +85,14 @@ margin: 2rem;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
 }
 
 .contacts-list li a img {
-    width: 44px;
-    height: 44px;
+    width: 5vmax;
+    height: 5vmax;
+}
+
+.image-text p {
+    flex: 1;
 }
