@@ -1,61 +1,85 @@
+<!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <title>О проекте</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
-        <div class="nav-bar">
+        <header class="top-header">
             <nav>
-                <ul class="nav-links">
-                    <li> <a>Главная</a></li>
-                    <li> <a>Профиль</a></li>
-                    <li> <a href="index.html">О поректе</a></li>
+                <a href="#"><img src="images/Enigma-logo.svg"></a>
+                <ul class="vertical-ul">
+                    <li> <a href="#">Главная</a></li>
+                    <li> <a href="index.html">О сайте</a></li>
                 </ul>
+                <button>login</button>
             </nav>
-        </div>
-        <div class="content-wrapper">
-            <div class="content-body">
-                <h1>О проекте</h1>
-                <h2>Описание проекта</h2>
-                <div class="content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Bletchley_Park_Naval_Enigma_IMG_3604.JPG/450px-Bletchley_Park_Naval_Enigma_IMG_3604.JPG"/>
-                    <p> Все слышали о легендарной энигме и истории её взлома, тогда понадобилось создать криптоаналитическоу машину
-                        <a>Bombe</a> чтобы расшифровать сообщения. С тех пор вычислительные возможности ЭВМ зничительно
-                        возрасли, и у многих возникает вопрос: "А насколько легко с помощью совремнных компьютеров можно взломать энигму?" Проект <span>Crack enigma</span> позволяет ответить на этот вопрос. 
-                        Здесь вы можете делиться зашифрованными с помощью <a>Enigma M4</a> сообщениями или пытаться расшифровать сообщения других людей.
-                    </p>
-                </div>
-                <h2>Инструменты разработки</h2>
-                <div class="content">
-                    <div class="content-image-wrapper">
-                        <img src="images/html-5-svgrepo-com.svg"/>
-                        <img src="images/css-3-svgrepo-com.svg"/>
-                        <img src="images/javascript-svgrepo-com.svg"/>
-                    </div>
-                    <p>При frontend разработке использовались html, css и javascript</p>
-                    <div class="content-image-wrapper">
-                        <img src="images/php2-svgrepo-com.svg"/>
-                        <img src="images/postgresql-svgrepo-com.svg"/>
-                    </div>
-                    <p>При backend разработке использовались язык php и СУБД PostgresSQL</p>
-                </div>
-            </div>
-            <div class="content-body">
-                <h1>Об авторе</h1>
-                <img src="images/profile.jpg" width="100" height="100"/>
-                <p>Какое-то описание</p>
-            </div>
-            <div class="content-body">
-                <h2>Контакты</h2>
-                <ul class="contacts-list">
-                    <li> <a href="https://github.com/Roboskeletron"><img src="images/github.svg"/></a></li>
-                    <li> <a href="https://discordapp.com/users/647068648229568532"><img src="images/discord.svg"/></a></li>
-                    <li> <a href="https://t.me/Roboskeletron"><img src="images/telegram.svg"/></a></li>
-                    <li> <a href="https://vk.com/id330795327"><img src="images/vk.svg"/></a></li>
+            <article class="wrapper">
+                <h1>Crack Enigma</h1>
+                <h2>Проверте свои знания и навыки, взломав легендарную Энигму!</h2>
+                <p>На данном сайте вы можете попытаться расшифровать тексты, зашифрованные виртуальной моделью Энигмы M4.
+                     Можно использовать любые знания и навыки, а также ресурсы интернета и вычислительную мощь
+                    современных ЭВМ. На сайт можно добавлять любые зашифрованные сообщения и устраивать соревнования
+                     между друзьями!</p>
+            </article>
+        </header>
+        <article class="wrapper">
+            <img src="images/enigma.jpg">
+
+            <section>
+                <h1>Frontend</h1>
+                <ul class="vertical-ul">
+                    <li> <img src="images/html-5-svgrepo-com.svg"> </li>
+                    <li> <img src="images/css-3-svgrepo-com.svg"> </li>
+                    <li> <img src="images/javascript-svgrepo-com.svg"> </li>
                 </ul>
-            </div>
-        </div>
+            </section>
+         
+            <section>
+                <h1>Backend</h1>
+                <ul class="vertical-ul">
+                    <li> <img src="images/php2-svgrepo-com.svg">
+                    <li> <img src="images/postgresql-svgrepo-com.svg"> </li>
+                </ul>
+            </section>
+
+            <section>
+                <h1>О авторе</h1>
+                <div class="image-text-section">
+                    <img src="images/author.jpg">
+                    <div>
+                        <h1>Илья Тупицын</h1>
+                        <p>
+                            <strong>Дата рождения: </strong> 14.11.2003<br>
+                            <strong>Образование: </strong> <a href="#">ВГУ ФКН ИСиТ</a><br>
+                            <strong> Знания и навыки: </strong>
+                            <ul>
+                                <li>Разработка мобильных приложений Android на 
+                            Java/Kotlin</li> 
+                                <li>Использование фреймворка Xamarin</li>
+                                <li>Знание ASP.NET Web</li>
+                                <li>Разработка декстопных приложний на языке C++</li> 
+                            </ul><br>
+                            <strong>О себе: </strong> активно занимаюсь самообразованием, прохожу
+                            курсы в интернете и работаю над собственными проектами. Также увлекаюсь IT в целом и играю в
+                            компьютерные игры.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </article>
+        <footer>
+            <h1>Контакты:</h1>
+            <section class="contacts">
+                <a href="https://github.com/Roboskeletron"><img src="images/github.svg"/></a>
+                <a href="https://discordapp.com/users/647068648229568532"><img src="images/discord.svg"/></a>
+                <a href="https://t.me/Roboskeletron"><img src="images/telegram.svg"/></a>
+                <a href="https://vk.com/id330795327"><img src="images/vk.svg"/></a>
+                <a href="mailto:wwwrt287@gmail.com"><img src="images/gmail.svg"/></a>
+            </section>
+        </footer>
     </body>
 </html>
