@@ -38,6 +38,12 @@ nav button {
     flex: 1;
 }
 
+.vertical-ul li a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
 nav img {
     max-height: 80px;
 }
@@ -65,6 +71,10 @@ nav img {
     grid-template-columns: 1fr 2fr;
     column-gap: 1rem;
     align-items: center;
+}
+
+.image-text-section a {
+    color: black;
 }
 
 footer{
