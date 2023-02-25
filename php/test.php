@@ -8,7 +8,18 @@
 </head>
 <body>
 <?php
-    echo "Hello world!"
+    $db = pg_connect("host=localhost port=5432 dbname=testdb user=admin password=SWBattlefront.Roboskeletron1920")
+    or die("Can't connect to database".pg_last_error());
+    //echo $db;
+    $data = pg_query($db, "SELECT * FROM users");
+    
+    while ($row = pg_fetch_row($data)){
+        foreach ($row as $col){
+            echo $col." ";
+        }
+        echo "<br/>\n";
+    }
+    pg_close($db);
     ?>
 </body>
 </html>
