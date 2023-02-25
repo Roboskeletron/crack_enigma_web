@@ -20,7 +20,7 @@ nav {
     background-color: #4a4e69;
 }
 
-nav button {
+.light-button {
     font-size: 1.5rem;
     border: 0;
     border-radius: 30px;
@@ -95,4 +95,76 @@ footer{
 
 .contacts img {
     width: 35%;
+}
+
+.popup {
+    width:100%;
+    min-height:100%;
+
+    background-color: rgba(0,0,0,0.5);
+    position:fixed;
+
+    top:0;
+    left: 0;
+
+    z-index: 1;
+    display: block;
+}
+
+.popup .wrapper {
+    padding: 1rem;
+    margin-top: 40vh;
+    position: relative;
+
+    overflow: auto;
+    border-radius: 30px;
+    background: linear-gradient(#22223b, #4a4e69);
+    color: #c9d1d9;
+    font-size: 1.5rem;
+}
+
+.popup .wrapper section {
+    border: none;
+}
+
+.popup .wrapper input{
+    margin: 0 5%;
+    width: 90%;
+
+    font-size: 1.5rem;
+    border: none;
+    border-bottom: 0.2rem solid #c9d1d9;
+
+    background: rgba(0, 0, 0, 0);
+    color: #c9d1d9;
+}
+
+.popup .wrapper input:focus {
+    outline: none;
+}
+
+.popup .wrapper a {
+    text-decoration: underline;
+}
+
+.close-button {
+    position: absolute;
+    top: 1%;
+    right: 0;
+    left: 90%;
+
+    padding: 0;
+
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    border-radius: 30px;
+}
+
+.close-button img {
+    width: 70%;
+    height: 70%;
+}
+
+.close-button:hover {
+    background: rgba(0, 0, 0, 0.1);
 }

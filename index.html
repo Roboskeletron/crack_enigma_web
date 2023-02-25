@@ -6,6 +6,7 @@
         <title></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/styles.css">
+        <script src="https://unpkg.com/cookielib/src/cookie.js"></script>
     </head>
     <body>
         <header class="top-header">
@@ -15,7 +16,7 @@
                     <li> <a href="php/test.php">Главная</a></li>
                     <li> <a href="index.html">О сайте</a></li>
                 </ul>
-                <button>login</button>
+                <button class="light-button" id="login_button" onclick="onLoginButtonClicked()">login</button>
             </nav>
             <article class="wrapper">
                 <h1>Crack Enigma</h1>
@@ -81,5 +82,22 @@
                 <a href="mailto:wwwrt287@gmail.com"><img src="images/gmail.svg"/></a>
             </section>
         </footer>
+
+        <article class="popup" id="popup">
+                <form class="wrapper">
+                    <button class="close-button"><img src="images/cross.svg"/></button>
+                    <section>
+                        E-mail:<br><input type="email"><br>
+                        Пароль:<br><input type="password"><br>
+                    </section>
+                    <section class="contacts">
+                        <button class="light-button">Login</button>
+                        <a>Sign up</a>
+                    </section>
+                </form>
+            
+        </article>
+
+        <script src="javascript/auth.js"></script>
     </body>
 </html>
