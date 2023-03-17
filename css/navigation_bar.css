@@ -1,0 +1,57 @@
+nav {
+    position: fixed;
+    width: 100%;
+    height: 90px;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4a4e69;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display:inline-flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+nav ul li {
+    max-height: 80px;
+}
+
+nav ul li a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+nav img {
+    max-height: 80px;
+}
+
+nav button {
+    margin-right: 1.5rem;
+    font-size: 1.5rem;
+    border: 0;
+    border-radius: 30px;
+    padding: 1rem 2rem;
+}
+
+.profile-button{
+    max-height: 80px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+
+    display: none;
+}

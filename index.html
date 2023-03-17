@@ -3,30 +3,24 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>О сайте</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/about.css">
         <script src="https://unpkg.com/cookielib/src/cookie.js"></script>
+        <script type="text/javascript">setCookie("reload_page", false)</script>
     </head>
     <body>
-        <header class="top-header">
-            <nav>
-                <a href="#"><img src="images/Enigma-logo.svg"></a>
-                <ul class="vertical-ul">
-                    <li> <a href="php/test.php">Главная</a></li>
-                    <li> <a href="index.html">О сайте</a></li>
-                </ul>
-                <button class="light-button" id="login_button" onclick="onLoginButtonClicked()">login</button>
-            </nav>
+        <header>
             <article class="wrapper">
                 <h1>Crack Enigma</h1>
                 <h2>Проверте свои знания и навыки, взломав легендарную Энигму!</h2>
-                <p>На данном сайте вы можете попытаться расшифровать тексты, зашифрованные виртуальной моделью Энигмы M4.
-                     Можно использовать любые знания и навыки, а также ресурсы интернета и вычислительную мощь
-                    современных ЭВМ. На сайт можно добавлять любые зашифрованные сообщения и устраивать соревнования
-                     между друзьями!</p>
+                    <p>На данном сайте вы можете попытаться расшифровать тексты, зашифрованные виртуальной моделью Энигмы M4.
+                         Можно использовать любые знания и навыки, а также ресурсы интернета и вычислительную мощь
+                        современных ЭВМ. На сайт можно добавлять любые зашифрованные сообщения и устраивать соревнования
+                        между друзьями!</p>
             </article>
         </header>
+
         <article class="wrapper">
             <img src="images/enigma.jpg">
 
@@ -48,7 +42,7 @@
             </section>
 
             <section>
-                <h1>О авторе</h1>
+                <h1>Об авторе</h1>
                 <div class="image-text-section">
                     <img src="images/author.jpg">
                     <div>
@@ -66,38 +60,22 @@
                             </ul><br>
                             <strong>О себе: </strong> активно занимаюсь самообразованием, прохожу
                             курсы в интернете и работаю над собственными проектами. Также увлекаюсь IT в целом и играю в
-                            компьютерные игры.
+                            компьютерные игры.<br>
                         </p>
                     </div>
                 </div>
+                <p><strong>Контакты: </strong>
+                    <div class="contacts">
+                        <a href="https://github.com/Roboskeletron"><img src="images/github.svg"/></a>
+                        <a href="https://discordapp.com/users/647068648229568532"><img src="images/discord.svg"/></a>
+                        <a href="https://t.me/Roboskeletron"><img src="images/telegram.svg"/></a>
+                        <a href="https://vk.com/id330795327"><img src="images/vk.svg"/></a>
+                        <a href="mailto:wwwrt287@gmail.com"><img src="images/gmail.svg"/></a>
+                    </div></p>
             </section>
         </article>
-        <footer>
-            <h1>Контакты:</h1>
-            <section class="contacts">
-                <a href="https://github.com/Roboskeletron"><img src="images/github.svg"/></a>
-                <a href="https://discordapp.com/users/647068648229568532"><img src="images/discord.svg"/></a>
-                <a href="https://t.me/Roboskeletron"><img src="images/telegram.svg"/></a>
-                <a href="https://vk.com/id330795327"><img src="images/vk.svg"/></a>
-                <a href="mailto:wwwrt287@gmail.com"><img src="images/gmail.svg"/></a>
-            </section>
-        </footer>
 
-        <article class="popup" id="popup">
-                <form class="wrapper">
-                    <button class="close-button"><img src="images/cross.svg"/></button>
-                    <section>
-                        E-mail:<br><input type="email"><br>
-                        Пароль:<br><input type="password"><br>
-                    </section>
-                    <section class="contacts">
-                        <button class="light-button">Login</button>
-                        <a>Sign up</a>
-                    </section>
-                </form>
-            
-        </article>
-
-        <script src="javascript/auth.js"></script>
+        <script src="javascript/navigation_bar.js"></script>
+        <script src="javascript/auth_form.js"></script>
     </body>
 </html>
