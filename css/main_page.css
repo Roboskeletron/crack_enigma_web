@@ -2,13 +2,17 @@
     color: green;
 }
 
+h3{
+    text-align: center;
+}
+
 .table{
     display: flex;
     flex-direction: column;
     justify-items: center;
-    min-height: 30rem;
 
     border: none !important;
+    border-radius: 0 !important;
     margin: 0 !important;
 
     gap: 1rem;

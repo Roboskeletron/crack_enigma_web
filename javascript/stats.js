@@ -46,12 +46,19 @@ function getStats() {
         showForm(true)
     }
 
+    function insertItem(table, item){
+        table.insertAdjacentHTML("beforeend",
+            `<button type="button" class="row">
+<span>${item["name"]}</span>
+<span>${item["total attempts"]}</span>
+<span>${item["successfu attempts"]}</span>
+</button>`)
+    }
+
     function handleResponse(response) {
-        document.getElementById("username").innerText = response["username"]
-        document.getElementById("my_msgs").innerText = response["encrypted messages"]
-        document.getElementById("my_decrypted_msgs").innerText = response["decrypted messages"]
-        document.getElementById("encrypted_msgs").innerText = response["total messages"]
-        document.getElementById("decrypted_msgs").innerText = response["successful attempts"]
+        document.getElementById("username").innerText = response["name"]
+        const table = document.getElementById("my cyphertexts")
+        response["cyphertexts"].forEach(item => insertItem(table, item))
     }
 }
 

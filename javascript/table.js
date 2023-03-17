@@ -1,4 +1,5 @@
 function getTableData() {
+    var token = getCookie("token")
     function responseCallback(response){
         const json = response.json()
         if (!response.ok){
@@ -28,7 +29,7 @@ function getTableData() {
 </button>`)
     }
 
-    const response = fetch('userinfo/cyphertexts.php')
+    const response = fetch('userinfo/cyphertexts.php?' + new URLSearchParams({token: token}).toString())
     response.then(response => responseCallback(response))
 }
 

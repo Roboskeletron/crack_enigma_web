@@ -28,7 +28,6 @@ else{
     $hash = password_hash($_SERVER["PHP_AUTH_PW"], null);
     $database->sql_query('INSERT INTO users VALUES ($1, $2, $3)',
     array($_POST["username"], $_SERVER["PHP_AUTH_USER"], $hash));
-    $database->sql_query('INSERT INTO user_stats VALUES ($1)', array($_SERVER["PHP_AUTH_USER"]));
 
     http_response_code(200);
     echo json_encode(array("message" => "Новый пользователь успешно зарегистрирован", "Email" => $_SERVER["PHP_AUTH_USER"],
