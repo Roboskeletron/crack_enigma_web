@@ -4,7 +4,10 @@ require_once("../database.php");
 require_once("validation.php");
 header("Content-Type: application/json; charset=UTF-8");
 
-$jwt_token = validate_jwt();
+$name = "null";
+
+if (isTokenSet())
+    $name = validate_jwt()["name"];
 
 $database = DatabaseProvider::get_database();
 
@@ -16,7 +19,7 @@ $start_id = validate_id(intval($_GET["item_id"]));
 
 $response = $database->sql_query('select id, name, author, "total attempts", 
 "successful attempts" from cyphertexts where author<>$1 and id > $2 limit $3',
-    array($jwt_token["name"], $start_id, $limit));
+    array($name, $start_id, $limit));
 
 $texts = $database->get_array($response);
 
