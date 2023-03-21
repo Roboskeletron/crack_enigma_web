@@ -10,10 +10,6 @@ function getTableData(id) {
         }
     }
 
-    function handleError(error){
-        console.error(error)
-    }
-
     function handleResponse(response){
         const table = document.getElementById("table_container")
         response.forEach(item => addItem(table, item))

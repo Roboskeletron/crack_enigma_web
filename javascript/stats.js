@@ -2,51 +2,24 @@ function getStats(id) {
     var token = getCookie("token")
     setCookie("reload_page", true)
 
-    if (token != null) {
-        const response = fetch('userinfo/stats.php?' + new URLSearchParams({token: token, limit: 3, item_id: id}).toString())
-        response.then(response => responseCallback(response))
-    } else {
-        handleError({"message": "identity token required"})
-    }
+    const response = fetch('userinfo/stats.php?' + new URLSearchParams({
+        token: token,
+        limit: 3,
+        item_id: id
+    }).toString())
+    response.then(response => responseCallback(response))
 
-    function responseCallback(response){
+    function responseCallback(response) {
         const json = response.json()
-        if (!response.ok){
-            console.error(response)
-
+        if (!response.ok) {
             json.then(error => handleError(error))
 
-        }
-        else{
+        } else {
             json.then(response => handleResponse(response))
         }
     }
 
-    function handleError(error){
-        switch (error["message"]){
-            case "token expired":
-                alert("Ваша сессия истекла, пожалуйста, войдите снова")
-                break
-            case "User not found":
-                alert("Аккаунт не найден, возможно, он был удалён. Пожалуйста, войдите в существующий аккаунт или создайте новый")
-                break
-            case "identity token required":
-                alert("Пожалуйста,  войдите в существующий аккаунт или создайте новый")
-                break
-            case "invalid token signature":
-                alert("Возможно токен был изменён, войдите в аккаунт снова")
-                break
-            default:
-                alert("Неизвестная ошибка")
-                break
-        }
-
-        deleteCookie("token")
-        document.getElementById("user stats").style.display = 'none'
-        showForm(true)
-    }
-
-    function insertItem(table, item){
+    function insertItem(table, item) {
         table.insertAdjacentHTML("beforeend",
             `<button type="button" class="row">
 <span>${item["name"]}</span>
