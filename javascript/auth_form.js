@@ -71,7 +71,7 @@ async function onFormSubmitted(){
 
         handleResponse(result, response.ok)
 
-        if (getCookie("reload_page")){
+        if (getCookie("reload_page") == 'true'){
             window.location.reload()
         }
 
