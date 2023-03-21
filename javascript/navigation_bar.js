@@ -47,6 +47,7 @@ function logout(){
 }
 
 function login(){
+    //TODO when failed to login it shows that we logged, fix this
     login_button.innerText = "Logout"
     profile_button.style.display = 'block'
     token = getCookie('token')
