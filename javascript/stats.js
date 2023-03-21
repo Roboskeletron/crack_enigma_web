@@ -1,9 +1,9 @@
-function getStats() {
+function getStats(id) {
     var token = getCookie("token")
     setCookie("reload_page", true)
 
     if (token != null) {
-        const response = fetch('userinfo/stats.php?' + new URLSearchParams({token: token}).toString())
+        const response = fetch('userinfo/stats.php?' + new URLSearchParams({token: token, limit: 4, item_id: id}).toString())
         response.then(response => responseCallback(response))
     } else {
         alert("Пожалуйста,  войдите с другого аккаунта или создайте новый")
@@ -51,7 +51,7 @@ function getStats() {
             `<button type="button" class="row">
 <span>${item["name"]}</span>
 <span>${item["total attempts"]}</span>
-<span>${item["successfu attempts"]}</span>
+<span>${item["successful attempts"]}</span>
 </button>`)
     }
 
@@ -59,8 +59,12 @@ function getStats() {
         document.getElementById("username").innerText = response["name"]
         const table = document.getElementById("my cyphertexts")
         response["cyphertexts"].forEach(item => insertItem(table, item))
+        if (response.length > 0)
+            setCookie("stats_id", response[response.length - 1]["id"])
+        else if (id == '0')
+            table.innerHTML = "У вас нет шифров"
     }
 }
 
-getStats()
-getTableData()
+getStats(0)
+getTableData(null)
