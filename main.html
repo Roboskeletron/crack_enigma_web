@@ -12,25 +12,29 @@
 <body>
     <header>
         <article class="wrapper">
-            <h1>Добро пожаловать <span class="stats" id="username"></span>! Готовы расшифровать несколько сообщений?</h1>
+            <h1>Добро пожаловать <span class="stats" id="username"></span>!</h1>
+            <div class="dark-table">
             <h3>Ваши шифры</h3>
-            <section class="table" id="my cyphertexts">
+            <section class="table three-cols" id="my cyphertexts">
                 <div class="row">
                     <div>Имя</div>
                     <div>Попытки взлома</div>
                     <div>Успешные попытки</div>
                 </div>
             </section>
+                <button type="button" class="more-button" onclick=onMoreButtonClicked("stats_id",getStats)>Показать больше</button>
+            </div>
         </article>
     </header>
 
-    <article class="wrapper">
+    <article class="wrapper light-table">
+        <h1>Готовы расшифровать несколько сообщений?</h1>
         <section class="table" id="table_container">
             <div class="row">
             <div>Имя</div><div>Автор</div><div>Всего попыток</div><div>Успешных попыток</div>
             </div>
         </section>
-        <div>page numbers</div>
+        <div><button type="button" class="more-button" onclick=onMoreButtonClicked("texts_id",getTableData)>Показать больше</button></div>
     </article>
 
     <script src="javascript/navigation_bar.js"></script>
