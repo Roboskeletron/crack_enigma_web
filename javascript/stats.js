@@ -3,11 +3,10 @@ function getStats(id) {
     setCookie("reload_page", true)
 
     if (token != null) {
-        const response = fetch('userinfo/stats.php?' + new URLSearchParams({token: token, limit: 4, item_id: id}).toString())
+        const response = fetch('userinfo/stats.php?' + new URLSearchParams({token: token, limit: 3, item_id: id}).toString())
         response.then(response => responseCallback(response))
     } else {
-        alert("Пожалуйста,  войдите с другого аккаунта или создайте новый")
-        showForm(true)
+        handleError({"message": "identity token required"})
     }
 
     function responseCallback(response){
@@ -29,10 +28,10 @@ function getStats(id) {
                 alert("Ваша сессия истекла, пожалуйста, войдите снова")
                 break
             case "User not found":
-                alert("Аккаунт не найден, возможно, он был удалён. Пожалуйста, войдите с другого аккаунта или создайте новый")
+                alert("Аккаунт не найден, возможно, он был удалён. Пожалуйста, войдите в существующий аккаунт или создайте новый")
                 break
             case "identity token required":
-                alert("Пожалуйста,  войдите с другого аккаунта или создайте новый")
+                alert("Пожалуйста,  войдите в существующий аккаунт или создайте новый")
                 break
             case "invalid token signature":
                 alert("Возможно токен был изменён, войдите в аккаунт снова")
@@ -43,6 +42,7 @@ function getStats(id) {
         }
 
         deleteCookie("token")
+        document.getElementById("user stats").style.display = 'none'
         showForm(true)
     }
 
@@ -58,9 +58,10 @@ function getStats(id) {
     function handleResponse(response) {
         document.getElementById("username").innerText = response["name"]
         const table = document.getElementById("my cyphertexts")
-        response["cyphertexts"].forEach(item => insertItem(table, item))
-        if (response.length > 0)
-            setCookie("stats_id", response[response.length - 1]["id"])
+        const texts = response["cyphertexts"]
+        texts.forEach(item => insertItem(table, item))
+        if (texts.length > 0)
+            setCookie("stats_id", texts[texts.length - 1]["id"])
         else if (id == '0')
             table.innerHTML = "У вас нет шифров"
     }
