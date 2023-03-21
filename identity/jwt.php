@@ -28,7 +28,7 @@ function decode_jwt($token): ?array
 }
 
 function validate_jwt(){
-    if (!isset($_GET["token"])){
+    if (!isTokenSet()){
         http_response_code(401);
         echo json_encode(array("message" => "identity token required"));
         die;
@@ -54,4 +54,8 @@ function validate_jwt(){
     }
 
     return $jwt_token;
+}
+
+function isTokenSet() : bool {
+    return isset($_GET["token"]) && $_GET["token"] != "undefined";
 }
