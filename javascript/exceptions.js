@@ -3,7 +3,7 @@ function handleError(error) {
         case "token expired":
             alert("Ваша сессия истекла, пожалуйста, войдите снова")
             break
-        case "User not found":
+        case "user not found":
             alert("Аккаунт не найден, возможно, он был удалён. Пожалуйста, войдите в существующий аккаунт или создайте новый")
             break
         case "identity token required":
@@ -18,6 +18,5 @@ function handleError(error) {
     }
 
     deleteCookie("token")
-    document.getElementById("user stats").style.display = 'none'
     showForm(true)
 }
