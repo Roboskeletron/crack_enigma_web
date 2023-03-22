@@ -17,7 +17,7 @@ header.insertAdjacentHTML("afterbegin",`
         <li> <a href="index.html">О сайте</a></li>
     </ul>
     <ul>
-        <li><button id="profile_button" class="profile-button"><img src="images/empty-profile.svg"></button></li>
+        <li><button id="profile_button" class="profile-button" onclick="window.location.replace('/profile.html')"><img src="images/empty-profile.svg"></button></li>
         <li><button id="login_button" onclick="onLoginButtonClicked()">Login</button></li>
     </ul>
 </nav>`);
