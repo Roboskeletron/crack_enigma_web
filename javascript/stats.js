@@ -13,6 +13,7 @@ function getStats(id) {
         const json = response.json()
         if (!response.ok) {
             json.then(error => handleError(error))
+            document.getElementById("user stats").style.display = 'none'
 
         } else {
             json.then(response => handleResponse(response))
