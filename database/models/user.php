@@ -5,10 +5,10 @@ class User implements IModel{
     private $email = null;
     private $password = null;
 
-    public function __construct($name, $email, $password, $is_hash = true){
+    public function __construct($name, $email, $password, $is_hash = false){
         $this->name = $name;
-        if ($is_hash){
-            set_password($password);
+        if (!$is_hash){
+            $this->set_password($password);
         }
         else {
             $this->password = $password;
@@ -36,7 +36,21 @@ class User implements IModel{
         $this->password = password_hash($password, null);
     }
 
-    public static function fetch($data){
-        return new User($data["name"], $data["email"], $data["password"], false);
+    public static function fetch($data): User
+    {
+        return new User($data["name"], $data["email"], $data["password"], true);
+    }
+
+    public static function get_from_database($database, $email)
+    {
+        $response = $database->sql_query('select * from users where email = $1', array($email));
+        $data = $database->get_array($response);
+
+        if (count($data) == 1)
+            return User::fetch($data[0]);
+        elseif (count($data) > 1)
+            return -1;
+
+        return null;
     }
 }
