@@ -40,4 +40,3 @@ class User implements IModel{
         return new User($data["name"], $data["email"], $data["password"], false);
     }
 }
-?>
