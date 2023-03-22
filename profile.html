@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="https://unpkg.com/cookielib/src/cookie.js"></script>
+</head>
+<body>
+
+<article class="items-in-center wrapper">
+    <section id="user info">
+        Имя пользователя: <label id="username label"></label><br>
+        E-mail: <label id="email label"></label>
+        <div class="bottom-buttons">
+            <button type="button" onclick="showEditForm(true)">Редактировать</button>
+            <button class="red-button" type="button" onclick="onDeleteAccountClicked()">Удалить аккаунт</button>
+        </div>
+    </section>
+    <section id="edit form">
+        <form autocomplete="off">
+            <span id="update error" class="error-text"></span>
+            Имя пользователя: <input class="text text-on-light" id="name field" required type="text"><br>
+            Текущий пароль: <input class="text text-on-light" id="current password" required type="password" minlength="8"><br>
+            Новый пароль: <input class="text text-on-light" id="new password" required type="password" minlength="8">
+        </form>
+        <div class="bottom-buttons">
+            <button type="button" onclick="onSaveProfileChangesClicked()">Сохранить</button>
+            <button class="red-button" type="button" onclick="showEditForm(false)">Отмена</button>
+        </div>
+    </section>
+</article>
+
+<script src="javascript/dependencies.js"></script>
+<script src="javascript/profile.js"></script>
+</body>
+</html>
