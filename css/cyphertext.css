@@ -24,3 +24,25 @@
     text-align: center;
     border: none;
 }
+
+.enigma-code{
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly;
+}
+
+.plug-board{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.plug{
+    background: transparent;
+    color: inherit !important;
+    font-size: inherit !important;
+    max-width: 2.5rem;
+    text-align: center;
+    border: none;
+    border-bottom: white solid 2px;
+}
