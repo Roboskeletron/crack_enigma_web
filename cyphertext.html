@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/cyphertext.css">
+</head>
+<body>
+<header>
+    <section class="wrapper">
+        <h1>Код</h1>
+        <p>Тип рефлектора: <select id="reflector type" class="rotor-info">
+            <option>B</option>
+            <option>C</option>
+        </select></p>
+        <div class="rotor-wrapper">
+            <select id="rotor4" class="rotor-info">
+                <option>&beta;</option>
+                <option>&gamma;</option>
+            </select>
+            <select id="rotor3" class="rotor-info"></select>
+            <select id="rotor2" class="rotor-info"></select>
+            <select id="rotor1" class="rotor-info"></select>
+            <button id="down rotor4"><img src="images/up-arrow.svg"></button>
+            <button id="down rotor3"><img src="images/up-arrow.svg"></button>
+            <button id="down rotor2"><img src="images/up-arrow.svg"></button>
+            <button id="down rotor1"><img src="images/up-arrow.svg"></button>
+            <input id="value rotor4" class="rotor-info" type="text" maxlength="1" required value="A" >
+            <input id="value rotor3" class="rotor-info" type="text" maxlength="1" required value="A" >
+            <input id="value rotor2" class="rotor-info" type="text" maxlength="1" required value="A" >
+            <input id="value rotor1" class="rotor-info" type="text" maxlength="1" required value="A" >
+            <button id="up rotor4"><img src="images/down-arrow.svg"></button>
+            <button id="up rotor3"><img src="images/down-arrow.svg"></button>
+            <button id="up rotor2"><img src="images/down-arrow.svg"></button>
+            <button id="up rotor1"><img src="images/down-arrow.svg"></button>
+        </div>
+    </section>
+</header>
+
+<script src="javascript/dependencies.js"></script>
+<script src="javascript/cyphertext.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+.rotor-wrapper{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    color: #c9d1d9;
+    align-items: center;
+    justify-items: center;
+}
+
+.rotor-wrapper button{
+    background: transparent;
+    border: none;
+    margin: 0;
+}
+
+.rotor-wrapper button img {
+    max-height: 35px;
+}
+
+.rotor-info{
+    background: transparent;
+    color: inherit !important;
+    font-size: inherit !important;
+    max-width: 2.5rem;
+    text-align: center;
+    border: none;
+}
