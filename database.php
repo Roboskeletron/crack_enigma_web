@@ -1,4 +1,5 @@
 <?php
+require_once "config/environment.php";
 interface IDatabase {
     public function sql_query($query, $params);
     public function connect();
@@ -9,9 +10,10 @@ interface IDatabase {
 
 class DatabaseProvider{
     //private static $database = getenv("DATABASE");
-    private static $database = "POSTGRESQL";
+    private static $database = null;
 
     public static function get_database(){
+        self::$database = $_ENV["DATABASE"];
         switch (self::$database) {
             case "POSTGRESQL":
                 require("database/postgresql.php");
