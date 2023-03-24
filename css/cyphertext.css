@@ -46,3 +46,38 @@
     border: none;
     border-bottom: white solid 2px;
 }
+
+.text-field{
+    min-height: 15rem;
+    min-width: 100%;
+    resize: none;
+    font-size: inherit;
+    padding: 1rem;
+    border-radius: 10px;
+    border-width: 2px;
+}
+
+.action-button{
+    position: relative;
+    left: 78%;
+    margin: 1em 0;
+    font-size: inherit;
+    background: #22223b;
+    color: white;
+}
+
+.swap-button{
+    position: relative;
+    bottom: 27em;
+    left: 50%;
+
+    background: transparent;
+    max-height: 50px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.swap-button >*{
+    max-height: inherit;
+}

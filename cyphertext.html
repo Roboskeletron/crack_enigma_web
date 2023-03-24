@@ -5,6 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/cyphertext.css">
+    <script src="https://unpkg.com/cookielib/src/cookie.js"></script>
 </head>
 <body>
 <header>
@@ -63,6 +64,16 @@
         </div>
     </section>
 </header>
+
+<article class="wrapper">
+    <h1>Текст</h1>
+    <textarea class="text-field"></textarea>
+    <h1>Зашифрованный текст</h1>
+    <textarea class="text-field" readonly></textarea>
+    </section>
+    <button class="swap-button" type="button"><img src="images/swap.svg"></button>
+    <button class="action-button light-button" type="button">Отправить</button>
+</article>
 
 <script src="javascript/dependencies.js"></script>
 <script src="javascript/cyphertext.js"></script>

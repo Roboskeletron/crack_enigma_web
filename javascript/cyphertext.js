@@ -1,5 +1,5 @@
 const rotors = [document.getElementById("rotor1"), document.getElementById("rotor2"),
-    document.getElementById("rotor3"), document.getElementById("rotor4")]
+    document.getElementById("rotor3")]
 
 function addRotorTypes(rotors) {
     rotors.forEach(rotor => rotor.insertAdjacentHTML("beforeend",
