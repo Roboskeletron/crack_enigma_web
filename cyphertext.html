@@ -13,30 +13,30 @@
         <div class="enigma-code">
             <div>
                 <h1>Код</h1>
-                <p>Тип рефлектора: <select id="reflector type" class="rotor-info">
+                <p>Тип рефлектора: <select id="reflector type" class="rotor-info" onchange="onTypeChanged('reflector type')">
                     <option>B</option>
                     <option>C</option>
                 </select></p>
                 <div class="rotor-wrapper">
-                    <select id="rotor4" class="rotor-info">
+                    <select id="rotor4" class="rotor-info" onchange="onTypeChanged('rotor4')">
                         <option>&beta;</option>
                         <option>&gamma;</option>
                     </select>
-                    <select id="rotor3" class="rotor-info"></select>
-                    <select id="rotor2" class="rotor-info"></select>
-                    <select id="rotor1" class="rotor-info"></select>
+                    <select id="rotor3" class="rotor-info" onchange="onTypeChanged('rotor3')"></select>
+                    <select id="rotor2" class="rotor-info" onchange="onTypeChanged('rotor2')"></select>
+                    <select id="rotor1" class="rotor-info" onchange="onTypeChanged('rotor1')"></select>
                     <button id="down rotor4"><img src="images/up-arrow.svg"></button>
                     <button id="down rotor3"><img src="images/up-arrow.svg"></button>
                     <button id="down rotor2"><img src="images/up-arrow.svg"></button>
                     <button id="down rotor1"><img src="images/up-arrow.svg"></button>
                     <input id="value rotor4" class="rotor-info" type="text" minlength="1" maxlength="1" required
-                           value="A">
+                           value="A" onchange="onPositionChanged('value rotor4')">
                     <input id="value rotor3" class="rotor-info" type="text" minlength="1" maxlength="1" required
-                           value="A">
+                           value="A" onchange="onPositionChanged('value rotor3')">
                     <input id="value rotor2" class="rotor-info" type="text" minlength="1" maxlength="1" required
-                           value="A">
+                           value="A" onchange="onPositionChanged('value rotor2')">
                     <input id="value rotor1" class="rotor-info" type="text" minlength="1" maxlength="1" required
-                           value="A">
+                           value="A" onchange="onPositionChanged('value rotor1')">
                     <button id="up rotor4"><img src="images/down-arrow.svg"></button>
                     <button id="up rotor3"><img src="images/down-arrow.svg"></button>
                     <button id="up rotor2"><img src="images/down-arrow.svg"></button>
@@ -67,15 +67,16 @@
 
 <article class="wrapper">
     <h1>Текст</h1>
-    <textarea class="text-field"></textarea>
+    <textarea id="text input" class="text-field" oninput="onTextInput()" onpaste="onPaste()"></textarea>
     <h1>Зашифрованный текст</h1>
-    <textarea class="text-field" readonly></textarea>
+    <textarea id="text output" class="text-field" readonly></textarea>
     </section>
-    <button class="swap-button" type="button"><img src="images/swap.svg"></button>
+    <button class="swap-button" type="button" onclick="onSwapClicked()"><img src="images/swap.svg"></button>
     <button class="action-button light-button" type="button">Отправить</button>
 </article>
 
 <script src="javascript/dependencies.js"></script>
+<script src="javascript/enigma.js"></script>
 <script src="javascript/cyphertext.js"></script>
 
 </body>

@@ -44,12 +44,22 @@ class Enigma {
         this._reflector = reflector;
         this._plugboard = plugboard;
 
-        this.rotor1.onNotchTrigged = rotor2.move
-        this.rotor2.onNotchTrigged = rotor3.move
+        this.rotor1.onNotchTrigged = rotor2
+        this.rotor2.onNotchTrigged = rotor3
     }
 
-    move() {
+    moveForward() {
         this.rotor1.moveForward()
+
+        if (this.rotor2.position == this.rotor2.step_trigger)
+            this.rotor2.moveForward()
+    }
+
+    moveBackward() {
+        this.rotor1.moveBackward()
+
+        if (this.rotor2.position == this.rotor2.step_trigger)
+            this.rotor2.moveBackward()
     }
 
     transform(letter) {
@@ -97,6 +107,23 @@ class Rotor {
     set position(val) {
         if (val.charCodeAt(0) >= 'A'.charCodeAt(0) && val.charCodeAt(0) <= 'Z'.charCodeAt(0)) {
             this._position = val
+
+            this.inputPins = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            this.transformationPins  = {
+                'I': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
+                'II': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
+                'III': 'BDFHJLCPRTXVZNYEIWGAKMUSQO',
+                'IV': 'ESOVPZJAYQUIRHXLNFTGKDCMWB',
+                'V': 'VZBRGITYUPSDNHLXAWMJQOFECK',
+                'VI': 'JPGVOUMFYQBENHZRDKASXLICTW',
+                'VII': 'NZJHGRCXMYSWBOUFAIVLPEKQDT',
+                'VIII': 'FKQHTLXOCBJSPDZRAMEWNIUYGV',
+                'β': 'LEYJVCNIXWPBQMDRTAKZGFUHOS',
+                'γ': 'FSOKANUERHMBTIYCWLQPZXVGJD'
+            }
+            for (let delta = val.charCodeAt(0) - 'A'.charCodeAt(0); delta > 0; delta--){
+                this.shiftInputPins()
+            }
             return
         }
 
@@ -104,29 +131,29 @@ class Rotor {
     }
 
     set type(val) {
-        switch (val.charCodeAt(0)) {
-            case 'I'.charCodeAt(0):
+        switch (val) {
+            case 'I':
                 this._step_trigger = 'Q'
                 break
-            case'II'.charCodeAt(0):
+            case'II':
                 this._step_trigger = 'E'
                 break
-            case 'III'.charCodeAt(0):
+            case 'III':
                 this._step_trigger = 'V'
                 break
-            case 'IV'.charCodeAt(0):
+            case 'IV':
                 this._step_trigger = 'J'
                 break
-            case 'V'.charCodeAt(0):
+            case 'V':
                 this._step_trigger = 'Z'
                 break
-            case 'VI'.charCodeAt(0):
-            case 'VII'.charCodeAt(0):
-            case 'VIII'.charCodeAt(0):
+            case 'VI':
+            case 'VII':
+            case 'VIII':
                 this._step_trigger = 'ZM'
                 break
-            case 'β'.charCodeAt(0):
-            case 'γ'.charCodeAt(0):
+            case 'β':
+            case 'γ':
                 this._step_trigger = 'none'
                 break
             default:
@@ -155,8 +182,8 @@ class Rotor {
     move(direction = 1) {
         let code = this.position.charCodeAt(0) + direction
 
-        if (this.position === this.step_trigger && direction === 1)
-            this._onNotchTriggedAction(direction)
+        if (this.position === this.step_trigger)
+            this._onNotchTriggedAction.move(direction)
 
         if (code > 'Z'.charCodeAt(0))
             code = 'A'.charCodeAt(0)
@@ -164,11 +191,6 @@ class Rotor {
             code = 'Z'.charCodeAt(0)
 
         this.position = String.fromCharCode(code)
-
-        if (this.position === this.step_trigger && direction === -1)
-            this._onNotchTriggedAction(direction)
-
-        this.shiftInputPins(direction)
     }
 
     moveForward() {
