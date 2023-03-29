@@ -326,8 +326,8 @@ class Plug {
         if (letter === this.pin1)
             return this.pin2
 
-        if (letter == this.pin2)
-            return this.pin2
+        if (letter === this.pin2)
+            return this.pin1
 
         return letter
     }

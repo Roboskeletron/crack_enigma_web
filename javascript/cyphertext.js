@@ -23,42 +23,46 @@ function addRotorTypes(rotors) {
 }
 
 function onPositionChanged(rotorId) {
-    const value = document.getElementById(rotorId).value
-    switch (rotorId) {
-        case 'value rotor1':
-            enigma.rotor1.position = value
-            break
-        case 'value rotor2':
-            enigma.rotor2.position = value
-            break
-        case 'value rotor3':
-            enigma.rotor3.position = value
-            break
-        case 'value rotor4':
-            enigma.rotor4.position = value
-            break
-    }
+    reevaluateText(() => {
+        const value = document.getElementById(rotorId).value
+        switch (rotorId) {
+            case 'value rotor1':
+                enigma.rotor1.position = value
+                break
+            case 'value rotor2':
+                enigma.rotor2.position = value
+                break
+            case 'value rotor3':
+                enigma.rotor3.position = value
+                break
+            case 'value rotor4':
+                enigma.rotor4.position = value
+                break
+        }
+    })
 }
 
 function onTypeChanged(rotorId) {
-    const value = document.getElementById(rotorId).value
-    switch (rotorId) {
-        case 'rotor1':
-            enigma.rotor1.type = value
-            break
-        case 'rotor2':
-            enigma.rotor2.type = value
-            break
-        case 'rotor3':
-            enigma.rotor3.type = value
-            break
-        case 'rotor4':
-            enigma.rotor4.type = value
-            break
-        case 'reflector type':
-            enigma.reflector.type = value
-            break
-    }
+    reevaluateText(() => {
+        const value = document.getElementById(rotorId).value
+        switch (rotorId) {
+            case 'rotor1':
+                enigma.rotor1.type = value
+                break
+            case 'rotor2':
+                enigma.rotor2.type = value
+                break
+            case 'rotor3':
+                enigma.rotor3.type = value
+                break
+            case 'rotor4':
+                enigma.rotor4.type = value
+                break
+            case 'reflector type':
+                enigma.reflector.type = value
+                break
+        }
+    })
 }
 
 function encryptLetter(value) {
@@ -113,16 +117,21 @@ function onTextInput() {
 
     const delta = input.value.length - length
 
-    if (delta < 0)
+    if (delta == -1)
         for (let i = delta; i < 0; i++) {
             deleteLetter(lastLetter)
             lastLetter = input.value.at(-1)
         }
-    else if (delta > 0)
+    else if (delta == 1)
         for (let i = length; i < length + delta; i++) {
             let value = input.value[i]
             encryptLetter(value)
         }
+    else {
+        reevaluateWholeText = true
+        onTextInput()
+        return
+    }
 
     length += delta
     lastLetter = input.value.at(-1)
@@ -132,10 +141,75 @@ function onPaste() {
     reevaluateWholeText = true
 }
 
-function onSwapClicked(){
+function onSwapClicked() {
     onPaste()
     input.value = output.value
     onTextInput()
+}
+
+function onRotorMoveButtonClicked(id) {
+    id = id.split(' ')
+
+    const direction = id[0] == 'up' ? 1 : -1
+    id = 'value ' + id[1]
+
+    const positionValue = document.getElementById(id)
+
+    let code = positionValue.value.charCodeAt(0) + direction
+    if (code < 'A'.charCodeAt(0))
+        code = 'Z'.charCodeAt(0)
+    else if (code > 'Z'.charCodeAt(0))
+        code = 'A'.charCodeAt(0)
+
+    positionValue.value = String.fromCharCode(code)
+
+    onPositionChanged(id)
+}
+
+function reevaluateText(action){
+    const text = input.value
+    input.value = ''
+    onPaste()
+    onTextInput()
+
+    action()
+
+    input.value = text
+    onTextInput()
+}
+
+function onPlugChanged(id){
+    const plug = document.getElementById(id)
+    plug.value = plug.value.toUpperCase()
+
+    id = Number.parseInt(id.split('').at(-1)) - 1
+
+    const values = plug.value.split('')
+
+    if (plug.value.length != 2 || !canEncrypt(values[0]) || !canEncrypt(values[1])) {
+        plug.value = ''
+        enigma.plugboard[id].pin1 = ' '
+        enigma.plugboard[id].pin2 = ' '
+        reevaluateText(() => {})
+        return
+    }
+
+    for(let i = 0; i < enigma.plugboard.length; i++)
+        if (enigma.plugboard[i].pin1 === values[0] || enigma.plugboard[i].pin1 === values[1]
+            || enigma.plugboard[i].pin2 === values[0] || enigma.plugboard[i].pin2 === values[1])
+        {
+            plug.value = ''
+            enigma.plugboard[id].pin1 = ' '
+            enigma.plugboard[id].pin2 = ' '
+            alert('Невозможно использовать одно значение несколько раз')
+            reevaluateText(() => {})
+            return
+        }
+
+    reevaluateText(() => {
+        enigma.plugboard[id].pin1 = values[0]
+        enigma.plugboard[id].pin2 = values[1]
+    })
 }
 
 addRotorTypes(rotors)

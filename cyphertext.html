@@ -25,10 +25,10 @@
                     <select id="rotor3" class="rotor-info" onchange="onTypeChanged('rotor3')"></select>
                     <select id="rotor2" class="rotor-info" onchange="onTypeChanged('rotor2')"></select>
                     <select id="rotor1" class="rotor-info" onchange="onTypeChanged('rotor1')"></select>
-                    <button id="down rotor4"><img src="images/up-arrow.svg"></button>
-                    <button id="down rotor3"><img src="images/up-arrow.svg"></button>
-                    <button id="down rotor2"><img src="images/up-arrow.svg"></button>
-                    <button id="down rotor1"><img src="images/up-arrow.svg"></button>
+                    <button id="down rotor4"><img src="images/up-arrow.svg" onclick="onRotorMoveButtonClicked('down rotor4')"></button>
+                    <button id="down rotor3"><img src="images/up-arrow.svg" onclick="onRotorMoveButtonClicked('down rotor3')"></button>
+                    <button id="down rotor2"><img src="images/up-arrow.svg" onclick="onRotorMoveButtonClicked('down rotor2')"></button>
+                    <button id="down rotor1"><img src="images/up-arrow.svg" onclick="onRotorMoveButtonClicked('down rotor1')"></button>
                     <input id="value rotor4" class="rotor-info" type="text" minlength="1" maxlength="1" required
                            value="A" onchange="onPositionChanged('value rotor4')">
                     <input id="value rotor3" class="rotor-info" type="text" minlength="1" maxlength="1" required
@@ -37,28 +37,28 @@
                            value="A" onchange="onPositionChanged('value rotor2')">
                     <input id="value rotor1" class="rotor-info" type="text" minlength="1" maxlength="1" required
                            value="A" onchange="onPositionChanged('value rotor1')">
-                    <button id="up rotor4"><img src="images/down-arrow.svg"></button>
-                    <button id="up rotor3"><img src="images/down-arrow.svg"></button>
-                    <button id="up rotor2"><img src="images/down-arrow.svg"></button>
-                    <button id="up rotor1"><img src="images/down-arrow.svg"></button>
+                    <button id="up rotor4"><img src="images/down-arrow.svg" onclick="onRotorMoveButtonClicked('up rotor4')"></button>
+                    <button id="up rotor3"><img src="images/down-arrow.svg" onclick="onRotorMoveButtonClicked('up rotor3')"></button>
+                    <button id="up rotor2"><img src="images/down-arrow.svg" onclick="onRotorMoveButtonClicked('up rotor2')"></button>
+                    <button id="up rotor1"><img src="images/down-arrow.svg" onclick="onRotorMoveButtonClicked('up rotor1')"></button>
                 </div>
             </div>
             <div>
-                <h1>Коммутационная паналь</h1>
+                <h1>Коммутационная панель</h1>
                 <div class="plug-board">
-                    <input id="plug1" class="plug" type="text" maxlength="2">
-                    <input id="plug2" class="plug" type="text" maxlength="2">
-                    <input id="plug3" class="plug" type="text" maxlength="2">
-                    <input id="plug4" class="plug" type="text" maxlength="2">
-                    <input id="plug5" class="plug" type="text" maxlength="2">
-                    <input id="plug6" class="plug" type="text" maxlength="2">
-                    <input id="plug7" class="plug" type="text" maxlength="2">
-                    <input id="plug8" class="plug" type="text" maxlength="2">
-                    <input id="plug9" class="plug" type="text" maxlength="2">
-                    <input id="plug10" class="plug" type="text" maxlength="2">
-                    <input id="plug11" class="plug" type="text" maxlength="2">
-                    <input id="plug12" class="plug" type="text" maxlength="2">
-                    <input id="plug13" class="plug" type="text" maxlength="2">
+                    <input id="plug1" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug1')">
+                    <input id="plug2" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug2')">
+                    <input id="plug3" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug3')">
+                    <input id="plug4" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug4')">
+                    <input id="plug5" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug5')">
+                    <input id="plug6" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug6')">
+                    <input id="plug7" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug7')">
+                    <input id="plug8" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug8')">
+                    <input id="plug9" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug9')">
+                    <input id="plug10" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug10')">
+                    <input id="plug11" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug11')">
+                    <input id="plug12" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug12')">
+                    <input id="plug13" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug13')">
                 </div>
             </div>
         </div>
