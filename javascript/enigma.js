@@ -182,7 +182,7 @@ class Rotor {
     move(direction = 1) {
         let code = this.position.charCodeAt(0) + direction
 
-        if (this.position === this.step_trigger)
+        if (this.position === this.step_trigger && this._onNotchTriggedAction != null)
             this._onNotchTriggedAction.move(direction)
 
         if (code > 'Z'.charCodeAt(0))
