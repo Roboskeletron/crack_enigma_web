@@ -8,6 +8,7 @@ let length = 0
 let encryptedLength = 0
 let lastLetter = ''
 let reevaluateWholeText = false
+let saveText = false
 
 function addRotorTypes(rotors) {
     rotors.forEach(rotor => rotor.insertAdjacentHTML("beforeend",
@@ -39,6 +40,7 @@ function onPositionChanged(rotorId) {
                 enigma.rotor4.position = value
                 break
         }
+        saveEnigmaStatus()
     })
 }
 
@@ -62,6 +64,7 @@ function onTypeChanged(rotorId) {
                 enigma.reflector.type = value
                 break
         }
+        saveEnigmaStatus()
     })
 }
 
@@ -112,6 +115,8 @@ function onTextInput() {
         }
         reevaluateWholeText = false
         length = input.value.length
+        lastLetter = input.value.at(-1)
+        saveInputText()
         return
     }
 
@@ -135,6 +140,7 @@ function onTextInput() {
 
     length += delta
     lastLetter = input.value.at(-1)
+    saveInputText()
 }
 
 function onPaste() {
@@ -182,7 +188,7 @@ function onPlugChanged(id){
     const plug = document.getElementById(id)
     plug.value = plug.value.toUpperCase()
 
-    id = Number.parseInt(id.split('').at(-1)) - 1
+    id = Number.parseInt(id.substring(4, 6)) - 1
 
     const values = plug.value.split('')
 
@@ -212,6 +218,136 @@ function onPlugChanged(id){
     })
 }
 
+function saveEnigmaStatus(){
+    const enigmaStatus = enigma.getStatus()
+
+    const json = JSON.stringify({'enigma status': enigmaStatus})
+
+    setCookie('enigmaStatus', json)
+}
+
+function updateEnigmaStatus(status){
+    if (status == null || status == '')
+        return
+
+    const json = JSON.parse(status)
+    const enigmaStatus = json['enigma status']
+
+    rotors[0].value = enigmaStatus['rotor1']['type']
+    rotors[1].value = enigmaStatus['rotor2']['type']
+    rotors[2].value = enigmaStatus['rotor3']['type']
+    rotors[3].value = enigmaStatus['rotor4']['type']
+    document.getElementById('reflector type').value = enigmaStatus['reflector']['type']
+
+    document.getElementById('value rotor1').value = enigmaStatus['rotor1']['position']
+    document.getElementById('value rotor2').value = enigmaStatus['rotor2']['position']
+    document.getElementById('value rotor3').value = enigmaStatus['rotor3']['position']
+    document.getElementById('value rotor4').value = enigmaStatus['rotor4']['position']
+
+    const  plugboard = enigmaStatus['plugboard']
+
+    for (let i = 0; i < plugboard.length; i++){
+        const id = 'plug' + (i + 1).toString()
+
+        document.getElementById(id).value = plugboard[i]['pin1'] + plugboard[i]['pin2']
+    }
+
+    applyEnigmaStatusChanges()
+}
+
+function applyEnigmaStatusChanges(){
+    onTypeChanged('rotor1')
+    onPositionChanged('value rotor1')
+    onTypeChanged('rotor2')
+    onPositionChanged('value rotor2')
+    onTypeChanged('rotor3')
+    onPositionChanged('value rotor3')
+    onTypeChanged('rotor4')
+    onPositionChanged('value rotor4')
+
+    onTypeChanged('reflector type')
+
+    for (let i = 1; i < 14; i++)
+        onPlugChanged('plug' + i.toString())
+}
+
+function saveInputText(){
+    if (!saveText)
+        return
+
+    setCookie('text', input.value)
+}
+
+function updateInputText(){
+    saveText = true
+    const text = getCookie('text')
+
+    if (text == null || text == '')
+        return
+
+    input.value = text
+    reevaluateText(() => {})
+}
+
+function onActionButtonClicked(){
+    const action = getAction()
+
+    switch (action){
+        case 'create':{
+            const enigmaStatus = getCookie('enigma status')
+            const name = prompt("Введите имя:", '')
+            const text = input.value
+
+            createCyphertext(name, text, enigmaStatus)
+            break
+        }
+        default:
+            throw new Error('Unsupported action provided')
+    }
+}
+
+function getAction() {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get(target, p, receiver) {
+            return target.get(p)
+        }
+    })
+
+    return params.action;
+}
+
+function onInitialized() {
+    const action = getAction();
+
+    if (action == null){
+        throw new Error('No action provided')
+    }
+
+    switch (action) {
+        case 'create':{
+            updateEnigmaStatus(getCookie('enigmaStatus'))
+            updateInputText()
+            break
+        }
+        default:
+            throw new Error('Unsupported action provided')
+    }
+}
+
+function createCyphertext(name, text, status){
+    if (name == null || name == ''){
+        alert('Попробуйте друго имя')
+        return
+    }
+
+    if (text == null || text == '')
+        return
+
+    const json = JSON.stringify({name: name, text: text, 'enigma status': status})
+}
+
 addRotorTypes(rotors)
 
 rotors.push(document.getElementById("rotor4"))
+
+onInitialized()

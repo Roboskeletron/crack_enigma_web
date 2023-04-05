@@ -81,6 +81,14 @@ class Enigma {
 
         return letter
     }
+
+    getStatus(){
+        const plugboardStatus = []
+        this.plugboard.forEach(plug => plugboardStatus.push(plug.getStatus()))
+
+        return {rotor1: this.rotor1.getStatus(), rotor2: this.rotor2.getStatus(), rotor3: this.rotor3.getStatus(),
+            rotor4: this.rotor4.getStatus(), reflector: this.reflector.getStatus(), plugboard: plugboardStatus}
+    }
 }
 
 class Rotor {
@@ -254,6 +262,10 @@ class Rotor {
     transformLeft(letter) {
         return this.transform(letter, 'left')
     }
+
+    getStatus(){
+        return {type: this.type, position: this.position}
+    }
 }
 
 class Reflector {
@@ -285,6 +297,10 @@ class Reflector {
         letter = transformString[letterPosition]
 
         return letter
+    }
+
+    getStatus(){
+        return {type: this.type}
     }
 }
 
@@ -330,5 +346,9 @@ class Plug {
             return this.pin1
 
         return letter
+    }
+
+    getStatus(){
+        return {pin1: this.pin1, pin2: this.pin2}
     }
 }
