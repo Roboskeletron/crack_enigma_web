@@ -3,6 +3,7 @@ require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("enigma.php");
 require_once("../web_tools/http.php");
+require_once ("../database/models/cyphertext.php");
 
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -28,33 +29,58 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         if (!$result) {
             $error = $database->get_error();
             if (str_contains($error, 'foreign key')) {
-                http_response_code(400);
-                echo json_encode(array("message" => "user not found"));
+                response_with_message(403, "user not found");
             } else if (str_contains($error, "duplicate key")) {
-                http_response_code(400);
-                echo json_encode(array("message" => "cyphertext with that name already exists"));
+                response_with_message(400, "cyphertext with that name already exists");
             } else {
-                http_response_code(500);
-                echo json_encode(array("message" => "unknown error"));
+                response_with_message(500, "unknown error");
             }
             break;
         }
 
-        http_response_code(200);
-        echo json_encode(array("message" => "cyphertext created successfully"));
+        $result = $database->sql_query('select id from cyphertexts where author = $1 and name = $2',
+            array($token['name'], $data['name']));
+
+        $data = $database->get_array($result)[0];
+
+        response_with_array(200, array("id" => $data['id'],"message" => "cyphertext created successfully"));
         break;
     }
     case 'GET':
     {
         if (!isset($_GET['id'])){
-            http_response_code(400);
-            echo json_encode(array("message" => "no id provided"));
+            response_with_message(400, "no id provided");
+            die;
         }
+
+        $database = DatabaseProvider::get_database();
+        $database->connect();
+
+        $id = $_GET['id'];
+        $result = $database->sql_query('select * from cyphertexts where id = $1', array($id));
+
+        $result = $database->get_array($result);
+
+        if (count($result) == 0){
+            response_with_message(404, "cyphertext not found");
+            break;
+        }
+
+        $cyphertext = Cyphertext::fetch($result[0]);
+
+        if ($cyphertext->getAuthor() == $token['name']){
+            $arr = array("id" =>$cyphertext->getId(), "name" => $cyphertext->getName(), "text" => $cyphertext->getText(),
+                "code" => $cyphertext->getCode());
+        }
+        else
+            $arr =array("id" =>$cyphertext->getId(), "name" => $cyphertext->getName(), "encrypted" => $cyphertext->getEncrypted());
+
+        response_with_array(200, $arr);
+        break;
     }
     default:
     {
-        echo json_encode(array("message" => "not supported request method"));
-        http_response_code(405);
+        response_with_message(405, "not supported request method");
         die;
     }
 }

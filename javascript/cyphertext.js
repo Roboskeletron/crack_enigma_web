@@ -290,7 +290,7 @@ function updateInputText(){
 }
 
 function onActionButtonClicked(){
-    const action = getAction()
+    const action = getParams().action
 
     switch (action){
         case 'create':{
@@ -306,18 +306,54 @@ function onActionButtonClicked(){
     }
 }
 
-function getAction() {
+function getParams() {
     const params = new Proxy(new URLSearchParams(window.location.search), {
         get(target, p, receiver) {
             return target.get(p)
         }
     })
 
-    return params.action;
+    return params;
+}
+
+function uploadCyphertext(id) {
+    if (id == null)
+        throw new Error("No id provided")
+
+    token = getCookie('token')
+
+    let response = fetch('/cyphertext/cyphertext.php?' + new URLSearchParams({token: token, id: id},{
+        method: 'GET'
+    }))
+
+    response.then(response => responseCallback(response))
+
+    function responseCallback(response){
+        const json = response.json()
+        if (response.ok)
+            json.then(response => handleResponse(response))
+        else
+            json.then(error => handleError(error))
+    }
+
+    function handleResponse(response){
+        if (response['code'] == null) {
+            alert('Попытка модификации чужого шифра')
+            window.history.back()
+            return
+        }
+
+        setCookie('enigmaStatus', response['code'])
+        setCookie('text', response['text'])
+        updateEnigmaStatus(JSON.stringify({'enigma status': response['code']}))
+        input.value = response['text']
+        updateInputText()
+    }
 }
 
 function onInitialized() {
-    const action = getAction();
+    const params = getParams()
+    const action = params.action
 
     if (action == null){
         throw new Error('No action provided')
@@ -327,6 +363,10 @@ function onInitialized() {
         case 'create':{
             updateEnigmaStatus(getCookie('enigmaStatus'))
             updateInputText()
+            break
+        }
+        case 'modify':{
+            uploadCyphertext(params.id)
             break
         }
         default:
@@ -356,7 +396,9 @@ function createCyphertext(name, text, status){
     })
 
     function handleResponse(response){
+        const id = response['id'];
 
+        window.location.replace('/cyphertext.html?' + new URLSearchParams({action:'modify', id:id}))
     }
 
     function responseCallback(response) {

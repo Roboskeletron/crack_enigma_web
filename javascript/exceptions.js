@@ -15,6 +15,12 @@ function handleError(error) {
         case "cyphertext with that name already exists":
             alert("Вы уже создавали шифр с таким именем")
             return
+        case "cyphertext not found":
+            alert('Шифр не найден')
+            return
+        case "no id provided":
+            alert("Не предоставлен id шифра")
+            return
         default:
             alert("Неизвестная ошибка")
             break
