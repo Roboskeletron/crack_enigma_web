@@ -2,6 +2,7 @@
 require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("../database/models/user.php");
+require_once("../web_tools/http.php");
 
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -10,13 +11,12 @@ $token = validate_jwt();
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
     {
-        echo json_encode($token);
-        http_response_code(200);
+        response_with_array(200, $token);
         exit;
     }
     case "PUT":
     {
-        $json = get_json_from_stream(fopen("php://input", "r"));
+        $json = get_raw_json();
 
         hasPassword($json);
 
@@ -28,7 +28,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         update_profile($database, $user, $json);
     }
     case "DELETE":{
-        $json = get_json_from_stream(fopen("php://input", "r"));
+        $json = get_raw_json();
 
         hasPassword($json);
 
@@ -46,33 +46,19 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     }
 }
 
-function get_json_from_stream($stream)
-{
-    $text = "";
-    while ($data = fread($stream, 1024)) {
-        $text = $text . $data;
-    }
-
-    fclose($stream);
-
-    return json_decode($text, true);
-}
-
 function hasPassword($json)
 {
     if (isset($json["password"]) && $json["password"] != "")
         return;
 
-    echo json_encode(array("message" => "password required"));
-    http_response_code(401);
+    response_with_message(401, "password required");
     die;
 }
 
 function update_profile($database, $user, $data){
     if ($user == null) {
         $database->close();
-        echo json_encode(array("message" => "user not found"));
-        http_response_code(404);
+        response_with_message(404, "user not found");
         die;
     }
 
@@ -91,8 +77,7 @@ function update_profile($database, $user, $data){
 
     if (!$response) {
         $database->close();
-        echo json_encode(array("message" => "Пользователь с таким именем уже существует"));
-        http_response_code(409);
+        response_with_message(409, "Пользователь с таким именем уже существует");
         die;
     }
 
@@ -101,8 +86,7 @@ function update_profile($database, $user, $data){
     setcookie("token", $token, time() + 60 * 30, '/');
     $database->close();
 
-    echo json_encode(array("message" => "profile updated successfully"));
-    http_response_code(200);
+    response_with_message(200, "profile updated successfully");
     exit;
 }
 
@@ -119,8 +103,7 @@ function password_verification($password, $user, $database): void
 function delete_profile($database, $user, $password){
     if ($user == null) {
         $database->close();
-        echo json_encode(array("message" => "user not found"));
-        http_response_code(404);
+        response_with_message(404, "user not found");
         die;
     }
 
@@ -129,7 +112,6 @@ function delete_profile($database, $user, $password){
     $database->sql_query('delete from users where email = $1', array($user->get_email()));
 
     $database->close();
-    echo json_encode(array("message" => "profile deleted successfully"));
-    http_response_code(200);
+    response_with_message(200, "profile deleted successfully");
     exit;
 }

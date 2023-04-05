@@ -2,6 +2,8 @@
 require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("validation.php");
+require_once("../web_tools/http.php");
+
 header("Content-Type: application/json; charset=UTF-8");
 
 
@@ -17,7 +19,6 @@ $response = $database->sql_query('SELECT id, name, "total attempts", "successful
     array($jwt_token["name"], $start_id, $limit));
 $result = $database->get_array($response);
 
-http_response_code(200);
-echo json_encode(array("name" => $jwt_token["name"], "cyphertexts" => $result));
+response_with_array(200, array("name" => $jwt_token["name"], "cyphertexts" => $result));
 
 $database->close();

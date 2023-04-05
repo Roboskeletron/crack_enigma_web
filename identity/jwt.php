@@ -1,5 +1,6 @@
 <?php
 require "../vendor/autoload.php";
+require_once "../web_tools/http.php";
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -29,8 +30,7 @@ function decode_jwt($token): ?array
 
 function validate_jwt(){
     if (!isTokenSet()){
-        http_response_code(401);
-        echo json_encode(array("message" => "identity token required"));
+        response_with_message(401, "identity token required");
         die;
     }
 
@@ -40,16 +40,14 @@ function validate_jwt(){
     if ($jwt_token == null){
         unset($_COOKIE['token']);
         setcookie('token', null, 1, '/');
-        http_response_code(401);
-        echo json_encode(array("message" => "invalid token signature"));
+        response_with_message(401, "invalid token signature");
         die;
     }
 
     $expires = $jwt_token["expires"];
 
     if ($expires < time()){
-        http_response_code(401);
-        echo json_encode(array("message" => "token expired"));
+        response_with_message(401, "token expired");
         die;
     }
 

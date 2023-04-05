@@ -2,6 +2,8 @@
 require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("validation.php");
+require_once("../web_tools/http.php");
+
 header("Content-Type: application/json; charset=UTF-8");
 
 $name = "null";
@@ -23,7 +25,6 @@ $response = $database->sql_query('select id, name, author, "total attempts",
 
 $texts = $database->get_array($response);
 
-http_response_code(200);
-echo json_encode($texts);
+response_with_array(200, $texts);
 
 $database->close();

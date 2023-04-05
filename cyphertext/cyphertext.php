@@ -2,6 +2,8 @@
 require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("enigma.php");
+require_once("../web_tools/http.php");
+
 header("Content-Type: application/json; charset=UTF-8");
 
 $token = validate_jwt();
@@ -9,7 +11,8 @@ $token = validate_jwt();
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "PUT":
     {
-        $data = get_json_from_stream(fopen("php://input", "r"));
+        $data = get_raw_json();
+
         $enigma = create_enigma($data['enigma status']);
 
         $encrypted = encrypt_text($data['text'], $enigma);
@@ -43,7 +46,10 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     }
     case 'GET':
     {
-
+        if (!isset($_GET['id'])){
+            http_response_code(400);
+            echo json_encode(array("message" => "no id provided"));
+        }
     }
     default:
     {
@@ -54,18 +60,6 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 }
 
 $database->close();
-
-function get_json_from_stream($stream)
-{
-    $text = "";
-    while ($data = fread($stream, 1024)) {
-        $text = $text . $data;
-    }
-
-    fclose($stream);
-
-    return json_decode($text, true);
-}
 
 /**
  * @param $enigma_status
