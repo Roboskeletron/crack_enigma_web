@@ -14,9 +14,36 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
         $encrypted = encrypt_text($data['text'], $enigma);
 
+        $database = DatabaseProvider::get_database();
+        $database->connect();
+
+        $status = json_encode($data['enigma status']);
+
+        $result = $database->sql_query('insert into cyphertexts (name, author, text, encrypted, code) values ($1, $2, $3, $4, $5)',
+            array($data['name'], $token['name'], $data['text'], $encrypted, $status));
+
+        if (!$result) {
+            $error = $database->get_error();
+            if (str_contains($error, 'foreign key')) {
+                http_response_code(400);
+                echo json_encode(array("message" => "user not found"));
+            } else if (str_contains($error, "duplicate key")) {
+                http_response_code(400);
+                echo json_encode(array("message" => "cyphertext with that name already exists"));
+            } else {
+                http_response_code(500);
+                echo json_encode(array("message" => "unknown error"));
+            }
+            break;
+        }
+
         http_response_code(200);
-        echo json_encode(array("message" => $encrypted));
+        echo json_encode(array("message" => "cyphertext created successfully"));
         break;
+    }
+    case 'GET':
+    {
+
     }
     default:
     {
@@ -25,6 +52,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         die;
     }
 }
+
+$database->close();
 
 function get_json_from_stream($stream)
 {
@@ -44,15 +73,21 @@ function get_json_from_stream($stream)
  */
 function create_enigma($enigma_status): Enigma
 {
-    $rotor1 = new Rotor($enigma_status['rotor1']['position'], $enigma_status['rotor1']['type']);
-    $rotor2 = new Rotor($enigma_status['rotor2']['position'], $enigma_status['rotor2']['type']);
-    $rotor3 = new Rotor($enigma_status['rotor3']['position'], $enigma_status['rotor3']['type']);
-    $rotor4 = new Rotor($enigma_status['rotor4']['position'], $enigma_status['rotor4']['type']);
-    $reflector = new ReflectorEnigma($enigma_status['reflector']['type']);
-    $plugboard = array();
+    try {
+        $rotor1 = new Rotor($enigma_status['rotor1']['position'], $enigma_status['rotor1']['type']);
+        $rotor2 = new Rotor($enigma_status['rotor2']['position'], $enigma_status['rotor2']['type']);
+        $rotor3 = new Rotor($enigma_status['rotor3']['position'], $enigma_status['rotor3']['type']);
+        $rotor4 = new Rotor($enigma_status['rotor4']['position'], $enigma_status['rotor4']['type']);
+        $reflector = new ReflectorEnigma($enigma_status['reflector']['type']);
+        $plugboard = array();
 
-    foreach ($enigma_status['plugboard'] as $key => $plug) {
-        array_push($plugboard, new Plug($plug['pin1'], $plug['pin2']));
+        foreach ($enigma_status['plugboard'] as $key => $plug) {
+            array_push($plugboard, new Plug($plug['pin1'], $plug['pin2']));
+        }
+    } catch (Throwable $exception) {
+        http_response_code(400);
+        echo json_encode(array("message" => "failed to generate enigma with provided parameters"));
+        die;
     }
 
     return new Enigma($rotor1, $rotor2, $rotor3, $rotor4, $reflector, $plugboard);

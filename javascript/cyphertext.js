@@ -294,7 +294,7 @@ function onActionButtonClicked(){
 
     switch (action){
         case 'create':{
-            const enigmaStatus = getCookie('enigma status')
+            const enigmaStatus = JSON.parse(getCookie('enigmaStatus'))
             const name = prompt("Введите имя:", '')
             const text = input.value
 
@@ -343,7 +343,31 @@ function createCyphertext(name, text, status){
     if (text == null || text == '')
         return
 
-    const json = JSON.stringify({name: name, text: text, 'enigma status': status})
+    const json = JSON.stringify({name: name, text: text, 'enigma status': status['enigma status']})
+    const token = getCookie('token')
+
+    let response = fetch('cyphertext/cyphertext.php?' +
+        new URLSearchParams({token: token}).toString(), {
+        method: 'PUT',
+        headers:{
+            ContentType: 'application/json'
+        },
+        body: json
+    })
+
+    function handleResponse(response){
+
+    }
+
+    function responseCallback(response) {
+        const json = response.json()
+        if (response.ok)
+            json.then(response => handleResponse(response))
+        else
+            json.then(error => handleError(error))
+    }
+
+    response.then(response => responseCallback(response))
 }
 
 addRotorTypes(rotors)

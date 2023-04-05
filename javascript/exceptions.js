@@ -12,6 +12,9 @@ function handleError(error) {
         case "invalid token signature":
             alert("Возможно токен был изменён, войдите в аккаунт снова")
             break
+        case "cyphertext with that name already exists":
+            alert("Вы уже создавали шифр с таким именем")
+            return
         default:
             alert("Неизвестная ошибка")
             break
