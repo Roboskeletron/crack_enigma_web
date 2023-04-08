@@ -3,79 +3,45 @@ require_once("../identity/jwt.php");
 require_once("../database.php");
 require_once("enigma.php");
 require_once("../web_tools/http.php");
-require_once ("../database/models/cyphertext.php");
+require_once("../database/models/cyphertext.php");
 
 header("Content-Type: application/json; charset=UTF-8");
 
 $token = validate_jwt();
+
+$database = DatabaseProvider::get_database();
+$database->connect();
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "PUT":
     {
         $data = get_raw_json();
 
-        $enigma = create_enigma($data['enigma status']);
-
-        $encrypted = encrypt_text($data['text'], $enigma);
-
-        $database = DatabaseProvider::get_database();
-        $database->connect();
-
-        $status = json_encode($data['enigma status']);
-
-        $result = $database->sql_query('insert into cyphertexts (name, author, text, encrypted, code) values ($1, $2, $3, $4, $5)',
-            array($data['name'], $token['name'], $data['text'], $encrypted, $status));
-
-        if (!$result) {
-            $error = $database->get_error();
-            if (str_contains($error, 'foreign key')) {
-                response_with_message(403, "user not found");
-            } else if (str_contains($error, "duplicate key")) {
-                response_with_message(400, "cyphertext with that name already exists");
-            } else {
-                response_with_message(500, "unknown error");
-            }
-            break;
-        }
-
-        $result = $database->sql_query('select id from cyphertexts where author = $1 and name = $2',
-            array($token['name'], $data['name']));
-
-        $data = $database->get_array($result)[0];
-
-        response_with_array(200, array("id" => $data['id'],"message" => "cyphertext created successfully"));
+        create_cyphertext($database, $data, $token);
         break;
     }
     case 'GET':
     {
-        if (!isset($_GET['id'])){
-            response_with_message(400, "no id provided");
-            die;
+        send_cyphertext($database, $token);
+        break;
+    }
+    case 'POST':
+    {
+        switch ($_GET['action']) {
+            case 'modify':
+            {
+                $data = get_raw_json();
+
+                update_cyphertext($database, $data);
+
+                break;
+            }
+            default:
+            {
+                response_with_message(405, 'not supported action');
+                break;
+            }
         }
-
-        $database = DatabaseProvider::get_database();
-        $database->connect();
-
-        $id = $_GET['id'];
-        $result = $database->sql_query('select * from cyphertexts where id = $1', array($id));
-
-        $result = $database->get_array($result);
-
-        if (count($result) == 0){
-            response_with_message(404, "cyphertext not found");
-            break;
-        }
-
-        $cyphertext = Cyphertext::fetch($result[0]);
-
-        if ($cyphertext->getAuthor() == $token['name']){
-            $arr = array("id" =>$cyphertext->getId(), "name" => $cyphertext->getName(), "text" => $cyphertext->getText(),
-                "code" => $cyphertext->getCode());
-        }
-        else
-            $arr =array("id" =>$cyphertext->getId(), "name" => $cyphertext->getName(), "encrypted" => $cyphertext->getEncrypted());
-
-        response_with_array(200, $arr);
         break;
     }
     default:
@@ -134,4 +100,85 @@ function encrypt_text($text, Enigma $enigma): string
         }
     }
     return $encrypted;
+}
+
+function check_query_result($result, $database): bool
+{
+    if (!$result) {
+        $error = $database->get_error();
+        if (str_contains($error, 'foreign key')) {
+            response_with_message(403, "user not found");
+        } else if (str_contains($error, "duplicate key")) {
+            response_with_message(400, "cyphertext with that name already exists");
+        } else {
+            response_with_message(500, "unknown error");
+        }
+        return false;
+    }
+
+    return true;
+}
+
+function create_cyphertext($database, $data, $token): bool
+{
+    $enigma = create_enigma($data['enigma status']);
+
+    $encrypted = encrypt_text($data['text'], $enigma);
+
+    $status = json_encode($data['enigma status']);
+
+    $result = $database->sql_query('insert into cyphertexts (name, author, text, encrypted, code) values ($1, $2, $3, $4, $5)',
+        array($data['name'], $token['name'], $data['text'], $encrypted, $status));
+
+    if (!check_query_result($result, $database))
+        return false;
+
+    $result = $database->sql_query('select id from cyphertexts where author = $1 and name = $2',
+        array($token['name'], $data['name']));
+
+    $data = $database->get_array($result)[0];
+
+    response_with_array(200, array("id" => $data['id'], "message" => "cyphertext created successfully"));
+    return true;
+}
+
+function update_cyphertext($database, $data)
+{
+    $enigma = create_enigma($data['enigma status']);
+
+    $encrypted = encrypt_text($data['text'], $enigma);
+
+    $status = json_encode($data['enigma status']);
+
+    $result = $database->sql_query('update cyphertexts  set text = $2, encrypted = $3, code = $4 where id = $1',
+        array($_GET['id'], $data['text'], $encrypted, $status));
+
+    if (!check_query_result($result, $database))
+        return false;
+
+    response_with_message(200, 'cyphertext updated successfully');
+}
+
+function send_cyphertext($database, $token)
+{
+    if (!isset($_GET['id'])) {
+        response_with_message(400, "no id provided");
+        die;
+    }
+
+    $id = $_GET['id'];
+
+    $cyphertext = Cyphertext::fetch_by_id($database, $id);
+
+    if ($cyphertext == null)
+        return false;
+
+    if ($cyphertext->getAuthor() == $token['name']) {
+        $arr = array("id" => $cyphertext->getId(), "name" => $cyphertext->getName(), "text" => $cyphertext->getText(),
+            "code" => $cyphertext->getCode());
+    } else
+        $arr = array("id" => $cyphertext->getId(), "name" => $cyphertext->getName(), "encrypted" => $cyphertext->getEncrypted());
+
+    response_with_array(200, $arr);
+    return true;
 }

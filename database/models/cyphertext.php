@@ -166,4 +166,18 @@ class Cyphertext implements IModel
 
         return new Cyphertext($id, $name, $author, $text, $encrypted, $code, $total_attempts, $successful_attempts);
     }
+
+    public static function fetch_by_id($database, $id): ?Cyphertext
+    {
+        $result = $database->sql_query('select * from cyphertexts where id = $1', array($id));
+
+        $result = $database->get_array($result);
+
+        if (count($result) == 0){
+            response_with_message(404, "cyphertext not found");
+            return null;
+        }
+
+        return Cyphertext::fetch($result[0]);
+    }
 }

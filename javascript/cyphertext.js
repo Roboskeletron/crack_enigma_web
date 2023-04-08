@@ -3,6 +3,7 @@ const input = document.getElementById('text input')
 const output = document.getElementById('text output')
 const rotors = [document.getElementById("rotor1"), document.getElementById("rotor2"),
     document.getElementById("rotor3")]
+const actionButton = document.getElementById('actionButton')
 
 let length = 0
 let encryptedLength = 0
@@ -301,6 +302,12 @@ function onActionButtonClicked(){
             createCyphertext(name, text, enigmaStatus)
             break
         }
+        case 'modify':{
+            const enigmaStatus = JSON.parse(getCookie('enigmaStatus'))
+            const text = input.value
+
+            uploadUpdate(text, enigmaStatus)
+        }
         default:
             throw new Error('Unsupported action provided')
     }
@@ -316,7 +323,7 @@ function getParams() {
     return params;
 }
 
-function uploadCyphertext(id) {
+function downloadCyphertext(id) {
     if (id == null)
         throw new Error("No id provided")
 
@@ -366,7 +373,8 @@ function onInitialized() {
             break
         }
         case 'modify':{
-            uploadCyphertext(params.id)
+            downloadCyphertext(params.id)
+            actionButton.innerText = "Сохранить"
             break
         }
         default:
@@ -407,6 +415,39 @@ function createCyphertext(name, text, status){
             json.then(response => handleResponse(response))
         else
             json.then(error => handleError(error))
+    }
+
+    response.then(response => responseCallback(response))
+}
+
+function uploadUpdate(text, status){
+    if (text.length == 0){
+        alert("Шифр не должен быть пустым")
+        return
+    }
+
+    const json = JSON.stringify({text: text, 'enigma status': status['enigma status']})
+    const token = getCookie('token')
+
+    let response = fetch('/cyphertext/cyphertext.php' + window.location.search +
+        '&' + new URLSearchParams({token: token}).toString(), {
+        method: 'POST',
+        headers:{
+            ContentType: 'application/json'
+        },
+        body: json
+    })
+
+    function responseCallback(response) {
+        const json = response.json()
+        if (response.ok)
+            json.then(response => handleResponse(response))
+        else
+            json.then(error => handleError(error))
+    }
+
+    function handleResponse(response){
+        window.location.reload()
     }
 
     response.then(response => responseCallback(response))

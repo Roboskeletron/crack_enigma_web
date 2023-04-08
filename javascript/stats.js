@@ -22,7 +22,7 @@ function getStats(id) {
 
     function insertItem(table, item) {
         table.insertAdjacentHTML("beforeend",
-            `<button type="button" class="row">
+            `<button type="button" class="row" onclick="onMyCyphertextClicked(${item['id']})">
 <span>${item["name"]}</span>
 <span>${item["total attempts"]}</span>
 <span>${item["successful attempts"]}</span>
@@ -39,6 +39,10 @@ function getStats(id) {
         else if (id == '0')
             table.innerHTML = "У вас нет шифров"
     }
+}
+
+function onMyCyphertextClicked(id){
+    window.location.replace('/cyphertext.html?' + new URLSearchParams({id:  id, action:'modify'}))
 }
 
 getStats(0)
