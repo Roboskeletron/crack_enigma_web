@@ -42,6 +42,23 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
                 break;
             }
+            case 'crack':
+            {
+                $id = getId();
+                $cyphertext = Cyphertext::fetch_by_id($database, $id);
+
+                if (check_author($cyphertext, $token, false)){
+                    response_with_message(403,
+                        'You cant crack your own cyphertext');
+                    break;
+                }
+
+                $data = get_raw_json();
+
+                crack_cyphertext($database, $cyphertext, $data);
+
+                break;
+            }
             default:
             {
                 response_with_message(405, 'not supported action');
@@ -50,7 +67,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
         break;
     }
-    case 'DELETE':{
+    case 'DELETE':
+    {
         $id = getId();
         $cyphertext = Cyphertext::fetch_by_id($database, $id);
 
@@ -64,7 +82,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     default:
     {
         response_with_message(405, "not supported request method");
-        die;
+        break;
     }
 }
 
@@ -211,11 +229,12 @@ function getId()
     return $_GET['id'];
 }
 
-function check_author($cyphertext, $token): bool
+function check_author($cyphertext, $token, $response = true): bool
 {
-    if ($cyphertext->getAuthor() != $token['name']){
-        response_with_message(403,
-            'cant modify cyphertext, which doesnt belong to user');
+    if ($cyphertext->getAuthor() != $token['name']) {
+        if ($response)
+            response_with_message(403,
+                'cant modify cyphertext, which doesnt belong to user');
 
         return false;
     }
@@ -223,12 +242,21 @@ function check_author($cyphertext, $token): bool
     return true;
 }
 
-function delete_cyphertext($id, $database){
+function delete_cyphertext($id, $database)
+{
     $result = $database->sql_query('delete from cyphertexts where id = $1',
-    array($id));
+        array($id));
 
     if (!check_query_result($result, $database))
         return;
 
     response_with_message(200, 'cyphertext deleted successfully');
+}
+
+function crack_cyphertext($database, $cyphertext, $data){
+    $code = $data['enigma status'];
+
+    if ($cyphertext->getCode() == $code){
+
+    }
 }
