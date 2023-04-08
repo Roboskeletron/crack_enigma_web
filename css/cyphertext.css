@@ -57,18 +57,27 @@
     border-width: 2px;
 }
 
-.action-button{
-    position: relative;
-    left: 78%;
-    margin: 1em 0;
+.action-buttons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
     font-size: inherit;
+}
+
+.action-button {
     background: #22223b;
+    color: white;
+}
+
+.delete-action{
+    display: none;
+    background: red;
     color: white;
 }
 
 .swap-button{
     position: relative;
-    bottom: 27em;
+    bottom: 31em;
     left: 50%;
 
     background: transparent;

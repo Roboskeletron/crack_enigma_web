@@ -30,9 +30,15 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         switch ($_GET['action']) {
             case 'modify':
             {
+                $id = getId();
+                $cyphertext = Cyphertext::fetch_by_id($database, $id);
+
+                if (!check_author($cyphertext, $token))
+                    break;
+
                 $data = get_raw_json();
 
-                update_cyphertext($database, $data);
+                update_cyphertext($database, $data, $id);
 
                 break;
             }
@@ -42,6 +48,17 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 break;
             }
         }
+        break;
+    }
+    case 'DELETE':{
+        $id = getId();
+        $cyphertext = Cyphertext::fetch_by_id($database, $id);
+
+        if (!check_author($cyphertext, $token))
+            break;
+
+        delete_cyphertext($id, $database);
+
         break;
     }
     default:
@@ -142,7 +159,7 @@ function create_cyphertext($database, $data, $token): bool
     return true;
 }
 
-function update_cyphertext($database, $data)
+function update_cyphertext($database, $data, $id)
 {
     $enigma = create_enigma($data['enigma status']);
 
@@ -151,7 +168,7 @@ function update_cyphertext($database, $data)
     $status = json_encode($data['enigma status']);
 
     $result = $database->sql_query('update cyphertexts  set text = $2, encrypted = $3, code = $4 where id = $1',
-        array($_GET['id'], $data['text'], $encrypted, $status));
+        array($id, $data['text'], $encrypted, $status));
 
     if (!check_query_result($result, $database))
         return false;
@@ -161,12 +178,10 @@ function update_cyphertext($database, $data)
 
 function send_cyphertext($database, $token)
 {
-    if (!isset($_GET['id'])) {
-        response_with_message(400, "no id provided");
-        die;
-    }
+    $id = getId();
 
-    $id = $_GET['id'];
+    if ($id == null)
+        return false;
 
     $cyphertext = Cyphertext::fetch_by_id($database, $id);
 
@@ -181,4 +196,39 @@ function send_cyphertext($database, $token)
 
     response_with_array(200, $arr);
     return true;
+}
+
+/**
+ * @return mixed
+ */
+function getId()
+{
+    if (!isset($_GET['id'])) {
+        response_with_message(400, "no id provided");
+        return null;
+    }
+
+    return $_GET['id'];
+}
+
+function check_author($cyphertext, $token): bool
+{
+    if ($cyphertext->getAuthor() != $token['name']){
+        response_with_message(403,
+            'cant modify cyphertext, which doesnt belong to user');
+
+        return false;
+    }
+
+    return true;
+}
+
+function delete_cyphertext($id, $database){
+    $result = $database->sql_query('delete from cyphertexts where id = $1',
+    array($id));
+
+    if (!check_query_result($result, $database))
+        return;
+
+    response_with_message(200, 'cyphertext deleted successfully');
 }

@@ -4,6 +4,7 @@ const output = document.getElementById('text output')
 const rotors = [document.getElementById("rotor1"), document.getElementById("rotor2"),
     document.getElementById("rotor3")]
 const actionButton = document.getElementById('actionButton')
+const deleteButton = document.getElementById('deleteButton')
 
 let length = 0
 let encryptedLength = 0
@@ -375,6 +376,7 @@ function onInitialized() {
         case 'modify':{
             downloadCyphertext(params.id)
             actionButton.innerText = "Сохранить"
+            deleteButton.style.display = 'block'
             break
         }
         default:
@@ -451,6 +453,31 @@ function uploadUpdate(text, status){
     }
 
     response.then(response => responseCallback(response))
+}
+
+function onDeleteButtonClicked(){
+    function responseCallback(response) {
+        const json = response.json()
+        if (response.ok)
+            json.then(response => handleResponse(response))
+        else
+            json.then(error => handleError(error))
+    }
+
+    function handleResponse(response){
+        deleteCookie('enigmaStatus')
+        deleteCookie('text')
+        window.history.back()
+    }
+
+    if (confirm('Удалить шифр? Это действие нельзя отменить!')){
+        let response = fetch('/cyphertext/cyphertext.php' + window.location.search +
+            '&' + new URLSearchParams({token: token}).toString(), {
+            method: 'DELETE'
+        })
+
+        response.then(response => responseCallback(response))
+    }
 }
 
 addRotorTypes(rotors)
