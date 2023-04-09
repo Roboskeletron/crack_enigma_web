@@ -27,6 +27,7 @@ function addRotorTypes(rotors) {
 
 function onPositionChanged(rotorId) {
     reevaluateText(() => {
+        document.getElementById(rotorId).value = document.getElementById(rotorId).value.toUpperCase()
         const value = document.getElementById(rotorId).value
         switch (rotorId) {
             case 'value rotor1':
@@ -174,7 +175,7 @@ function onRotorMoveButtonClicked(id) {
     onPositionChanged(id)
 }
 
-function reevaluateText(action){
+function reevaluateText(action) {
     const text = input.value
     input.value = ''
     onPaste()
@@ -186,7 +187,7 @@ function reevaluateText(action){
     onTextInput()
 }
 
-function onPlugChanged(id){
+function onPlugChanged(id) {
     const plug = document.getElementById(id)
     plug.value = plug.value.toUpperCase()
 
@@ -196,31 +197,35 @@ function onPlugChanged(id){
 
     if (plug.value.length != 2 || !canEncrypt(values[0]) || !canEncrypt(values[1])) {
         plug.value = ''
-        enigma.plugboard[id].pin1 = ' '
-        enigma.plugboard[id].pin2 = ' '
-        reevaluateText(() => {})
+        reevaluateText(() => {
+            enigma.plugboard[id].pin1 = ' '
+            enigma.plugboard[id].pin2 = ' '
+            saveEnigmaStatus()
+        })
         return
     }
 
-    for(let i = 0; i < enigma.plugboard.length; i++)
+    for (let i = 0; i < enigma.plugboard.length; i++)
         if (enigma.plugboard[i].pin1 === values[0] || enigma.plugboard[i].pin1 === values[1]
-            || enigma.plugboard[i].pin2 === values[0] || enigma.plugboard[i].pin2 === values[1])
-        {
+            || enigma.plugboard[i].pin2 === values[0] || enigma.plugboard[i].pin2 === values[1]) {
             plug.value = ''
-            enigma.plugboard[id].pin1 = ' '
-            enigma.plugboard[id].pin2 = ' '
             alert('Невозможно использовать одно значение несколько раз')
-            reevaluateText(() => {})
+            reevaluateText(() => {
+                enigma.plugboard[id].pin1 = ' '
+                enigma.plugboard[id].pin2 = ' '
+                saveEnigmaStatus()
+            })
             return
         }
 
     reevaluateText(() => {
         enigma.plugboard[id].pin1 = values[0]
         enigma.plugboard[id].pin2 = values[1]
+        saveEnigmaStatus()
     })
 }
 
-function saveEnigmaStatus(){
+function saveEnigmaStatus() {
     const enigmaStatus = enigma.getStatus()
 
     const json = JSON.stringify({'enigma status': enigmaStatus})
@@ -228,7 +233,7 @@ function saveEnigmaStatus(){
     setCookie('enigmaStatus', json)
 }
 
-function updateEnigmaStatus(status){
+function updateEnigmaStatus(status) {
     if (status == null || status == '')
         return
 
@@ -246,9 +251,9 @@ function updateEnigmaStatus(status){
     document.getElementById('value rotor3').value = enigmaStatus['rotor3']['position']
     document.getElementById('value rotor4').value = enigmaStatus['rotor4']['position']
 
-    const  plugboard = enigmaStatus['plugboard']
+    const plugboard = enigmaStatus['plugboard']
 
-    for (let i = 0; i < plugboard.length; i++){
+    for (let i = 0; i < plugboard.length; i++) {
         const id = 'plug' + (i + 1).toString()
 
         document.getElementById(id).value = plugboard[i]['pin1'] + plugboard[i]['pin2']
@@ -257,7 +262,7 @@ function updateEnigmaStatus(status){
     applyEnigmaStatusChanges()
 }
 
-function applyEnigmaStatusChanges(){
+function applyEnigmaStatusChanges() {
     onTypeChanged('rotor1')
     onPositionChanged('value rotor1')
     onTypeChanged('rotor2')
@@ -273,14 +278,14 @@ function applyEnigmaStatusChanges(){
         onPlugChanged('plug' + i.toString())
 }
 
-function saveInputText(){
+function saveInputText() {
     if (!saveText)
         return
 
     setCookie('text', input.value)
 }
 
-function updateInputText(){
+function updateInputText() {
     saveText = true
     const text = getCookie('text')
 
@@ -288,14 +293,15 @@ function updateInputText(){
         return
 
     input.value = text
-    reevaluateText(() => {})
+    reevaluateText(() => {
+    })
 }
 
-function onActionButtonClicked(){
+function onActionButtonClicked() {
     const action = getParams().action
 
-    switch (action){
-        case 'create':{
+    switch (action) {
+        case 'create': {
             const enigmaStatus = JSON.parse(getCookie('enigmaStatus'))
             const name = prompt("Введите имя:", '')
             const text = input.value
@@ -303,11 +309,17 @@ function onActionButtonClicked(){
             createCyphertext(name, text, enigmaStatus)
             break
         }
-        case 'modify':{
+        case 'modify': {
             const enigmaStatus = JSON.parse(getCookie('enigmaStatus'))
             const text = input.value
 
             uploadUpdate(text, enigmaStatus)
+        }
+        case 'crack': {
+            const enigmaStatus = getCookie('enigmaStatus')
+
+            uploadCrack(enigmaStatus)
+            break
         }
         default:
             throw new Error('Unsupported action provided')
@@ -330,13 +342,13 @@ function downloadCyphertext(id) {
 
     token = getCookie('token')
 
-    let response = fetch('/cyphertext/cyphertext.php?' + new URLSearchParams({token: token, id: id},{
+    let response = fetch('/cyphertext/cyphertext.php?' + new URLSearchParams({token: token, id: id}, {
         method: 'GET'
     }))
 
     response.then(response => responseCallback(response))
 
-    function responseCallback(response){
+    function responseCallback(response) {
         const json = response.json()
         if (response.ok)
             json.then(response => handleResponse(response))
@@ -344,10 +356,11 @@ function downloadCyphertext(id) {
             json.then(error => handleError(error))
     }
 
-    function handleResponse(response){
+    function handleResponse(response) {
         if (response['code'] == null) {
-            alert('Попытка модификации чужого шифра')
-            window.history.back()
+            setCookie('text', response['encrypted'])
+            input.value = response['text']
+            updateInputText()
             return
         }
 
@@ -363,20 +376,25 @@ function onInitialized() {
     const params = getParams()
     const action = params.action
 
-    if (action == null){
+    if (action == null) {
         throw new Error('No action provided')
     }
 
     switch (action) {
-        case 'create':{
+        case 'create': {
             updateEnigmaStatus(getCookie('enigmaStatus'))
             updateInputText()
             break
         }
-        case 'modify':{
+        case 'modify': {
             downloadCyphertext(params.id)
             actionButton.innerText = "Сохранить"
             deleteButton.style.display = 'block'
+            break
+        }
+        case 'crack': {
+            saveEnigmaStatus()
+            downloadCyphertext(params.id)
             break
         }
         default:
@@ -384,8 +402,8 @@ function onInitialized() {
     }
 }
 
-function createCyphertext(name, text, status){
-    if (name == null || name == ''){
+function createCyphertext(name, text, status) {
+    if (name == null || name == '') {
         alert('Попробуйте друго имя')
         return
     }
@@ -399,16 +417,16 @@ function createCyphertext(name, text, status){
     let response = fetch('cyphertext/cyphertext.php?' +
         new URLSearchParams({token: token}).toString(), {
         method: 'PUT',
-        headers:{
+        headers: {
             ContentType: 'application/json'
         },
         body: json
     })
 
-    function handleResponse(response){
+    function handleResponse(response) {
         const id = response['id'];
 
-        window.location.replace('/cyphertext.html?' + new URLSearchParams({action:'modify', id:id}))
+        window.location.replace('/cyphertext.html?' + new URLSearchParams({action: 'modify', id: id}))
     }
 
     function responseCallback(response) {
@@ -422,8 +440,8 @@ function createCyphertext(name, text, status){
     response.then(response => responseCallback(response))
 }
 
-function uploadUpdate(text, status){
-    if (text.length == 0){
+function uploadUpdate(text, status) {
+    if (text.length == 0) {
         alert("Шифр не должен быть пустым")
         return
     }
@@ -434,7 +452,7 @@ function uploadUpdate(text, status){
     let response = fetch('/cyphertext/cyphertext.php' + window.location.search +
         '&' + new URLSearchParams({token: token}).toString(), {
         method: 'POST',
-        headers:{
+        headers: {
             ContentType: 'application/json'
         },
         body: json
@@ -448,14 +466,14 @@ function uploadUpdate(text, status){
             json.then(error => handleError(error))
     }
 
-    function handleResponse(response){
+    function handleResponse(response) {
         window.location.reload()
     }
 
     response.then(response => responseCallback(response))
 }
 
-function onDeleteButtonClicked(){
+function onDeleteButtonClicked() {
     function responseCallback(response) {
         const json = response.json()
         if (response.ok)
@@ -464,13 +482,13 @@ function onDeleteButtonClicked(){
             json.then(error => handleError(error))
     }
 
-    function handleResponse(response){
+    function handleResponse(response) {
         deleteCookie('enigmaStatus')
         deleteCookie('text')
         window.history.back()
     }
 
-    if (confirm('Удалить шифр? Это действие нельзя отменить!')){
+    if (confirm('Удалить шифр? Это действие нельзя отменить!')) {
         let response = fetch('/cyphertext/cyphertext.php' + window.location.search +
             '&' + new URLSearchParams({token: token}).toString(), {
             method: 'DELETE'
@@ -478,6 +496,40 @@ function onDeleteButtonClicked(){
 
         response.then(response => responseCallback(response))
     }
+}
+
+function uploadCrack(code) {
+    let response = fetch('/cyphertext/cyphertext.php' + window.location.search +
+        '&' + new URLSearchParams({token: token}).toString(), {
+        method: 'POST',
+        headers: {
+            ContentType: 'application/json'
+        },
+        body: code
+    })
+
+    function responseCallback(response) {
+        const json = response.json()
+        if (response.ok)
+            json.then(response => handleResponse(response))
+        else
+            json.then(error => handleError(error))
+    }
+
+    function handleResponse(response) {
+        switch (response['message']) {
+            case 'failed to crack cyphertext due to invalid code': {
+                alert('Не удалось взломать шифр, неверный код')
+                break
+            }
+            case 'cyphertext cracked successfully': {
+                alert('Шифр взломан успешно')
+                break
+            }
+        }
+    }
+
+    response.then(response => responseCallback(response))
 }
 
 addRotorTypes(rotors)

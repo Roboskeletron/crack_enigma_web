@@ -36,7 +36,7 @@ class Cyphertext implements IModel
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -106,9 +106,9 @@ class Cyphertext implements IModel
     }
 
     /**
-     * @return object
+     * @return array
      */
-    public function getCode() : object
+    public function getCode(): array
     {
         return $this->code;
     }
@@ -118,7 +118,7 @@ class Cyphertext implements IModel
      */
     public function setCode(string $code): void
     {
-        $this->code = json_decode($code);
+        $this->code = json_decode($code, true);
     }
 
     /**
@@ -153,6 +153,13 @@ class Cyphertext implements IModel
         $this->successful_attempts = $successful_attempts;
     }
 
+    public function increaseAttempts(bool $successful = false)
+    {
+        if ($successful)
+            $this->successful_attempts++;
+        $this->total_attempts++;
+    }
+
     public static function fetch($data): Cyphertext
     {
         $id = $data['id'];
@@ -173,7 +180,7 @@ class Cyphertext implements IModel
 
         $result = $database->get_array($result);
 
-        if (count($result) == 0){
+        if (count($result) == 0) {
             response_with_message(404, "cyphertext not found");
             return null;
         }

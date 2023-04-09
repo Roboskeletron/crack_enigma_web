@@ -21,9 +21,15 @@ function handleError(error) {
         case "no id provided":
             alert("Не предоставлен id шифра")
             return
+        case "cant modify cyphertext, which doesnt belong to user":
+            alert("Попытка модификации чужого шифра")
+            return
+        case "You cant crack your own cyphertext":
+            alert("Нельзя взломать свой собственный шифр")
+            return;
         default:
             alert("Неизвестная ошибка")
-            break
+            return
     }
 
     deleteCookie("token")

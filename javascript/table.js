@@ -36,7 +36,7 @@ function getTableData(id) {
 }
 
 function onItemClicked(id){
-
+    window.location.replace('/cyphertext.html?' + new URLSearchParams({id: id, action: 'crack'}))
 }
 
 function onMoreButtonClicked(id, callback){

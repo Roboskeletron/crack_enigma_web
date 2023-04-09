@@ -47,7 +47,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 $id = getId();
                 $cyphertext = Cyphertext::fetch_by_id($database, $id);
 
-                if (check_author($cyphertext, $token, false)){
+                if (check_author($cyphertext, $token, false)) {
                     response_with_message(403,
                         'You cant crack your own cyphertext');
                     break;
@@ -253,10 +253,18 @@ function delete_cyphertext($id, $database)
     response_with_message(200, 'cyphertext deleted successfully');
 }
 
-function crack_cyphertext($database, $cyphertext, $data){
+function crack_cyphertext($database, $cyphertext, $data)
+{
     $code = $data['enigma status'];
 
-    if ($cyphertext->getCode() == $code){
-
+    if ($cyphertext->getCode() == $code) {
+        $cyphertext->increaseAttempts(true);
+        response_with_message(200, 'cyphertext cracked successfully');
+    } else {
+        $cyphertext->increaseAttempts();
+        response_with_message(200, 'failed to crack cyphertext due to invalid code');
     }
+
+    $database->sql_query('update cyphertexts set "successful attempts" = $1, "total attempts" = $2 where id = $3',
+        array($cyphertext->getSuccessfulAttempts(), $cyphertext->getTotalAttempts(), $cyphertext->getId()));
 }
