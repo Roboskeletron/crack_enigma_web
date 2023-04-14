@@ -14,15 +14,24 @@ class Mysql implements IDatabase
     {
         $param_array = array();
         $new_query = '';
-        $types = '';
 
         foreach (explode(' ', $query) as $word) {
             $position = strpos($word, '$');
             if (gettype($position) == "integer"){
-                $index = intval(substr($word, $position + 1)) - 1;
+                $number = '';
+                $rest_str = '';
+                foreach (str_split(substr($word, $position + 1)) as $symbol){
+                    $code = ord($symbol);
+                    if ($code >= ord('0') && $code <= ord('9'))
+                        $number .=$symbol;
+                    else
+                        $rest_str .= $symbol;
+                }
+
+                $index = intval($number) - 1;
+
                 array_push($param_array, $params[$index]);
-                $new_query = $new_query.' '.substr($word, 0, $position).' '.'?';
-                $types = $types.'s';
+                $new_query = $new_query.' '.substr($word, 0, $position).' '.'?'.$rest_str;
                 continue;
             }
 
@@ -33,7 +42,6 @@ class Mysql implements IDatabase
 
         $statement->execute($param_array);
         return $statement;
-        // TODO: Implement sql_query() method.
     }
 
     public function connect()
@@ -47,13 +55,11 @@ class Mysql implements IDatabase
 
         $dst = 'mysql:host='.$host.';dbname='.$name.';port='.$port;
         $this->database = new PDO($dst, $user, $password);
-        // TODO: Implement connect() method.
     }
 
     public function close()
     {
         $this->database = null;
-        // TODO: Implement close() method.
     }
 
     public function get_error()
@@ -65,6 +71,5 @@ class Mysql implements IDatabase
     public function get_array($response)
     {
         return $response->fetchAll();
-        // TODO: Implement get_array() method.
     }
 }
