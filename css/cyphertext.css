@@ -90,3 +90,21 @@
 .swap-button >*{
     max-height: inherit;
 }
+
+.reset-button{
+    max-height: 40px;
+    background: transparent;
+    position: relative;
+    border: none;
+}
+
+.reset-button >*{
+    max-height: inherit;
+}
+
+.reset-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1em;
+}

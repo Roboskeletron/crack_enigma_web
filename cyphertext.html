@@ -53,6 +53,9 @@
                 </div>
             </div>
             <div>
+                <div class="reset-container">
+                    <button class="reset-button" onclick="onResetStatusClicked()"><img src="images/reset-light.svg"></button>
+                </div>
                 <h1>Коммутационная панель</h1>
                 <div class="plug-board">
                     <input id="plug1" class="plug" type="text" maxlength="2" onchange="onPlugChanged('plug1')">
@@ -75,7 +78,10 @@
 </header>
 
 <article class="wrapper">
-    <h1>Текст</h1>
+    <div class="reset-container" style="justify-content: space-between">
+        <h1>Текст</h1>
+        <button class="reset-button" onclick="onResetTextClicked()"><img src="images/reset-dark.svg"></button>
+    </div>
     <textarea id="text input" class="text-field" oninput="onTextInput()" onpaste="onPaste()"></textarea>
     <h1>Зашифрованный текст</h1>
     <textarea id="text output" class="text-field" readonly></textarea>
