@@ -45,5 +45,9 @@ function onMyCyphertextClicked(id){
     window.location.replace('/cyphertext.html?' + new URLSearchParams({id:  id, action:'modify'}))
 }
 
+function onAddButtonClicked(){
+    window.location.replace('cyphertext.html?action=create')
+}
+
 getStats(0)
 getTableData(null)
