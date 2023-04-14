@@ -24,8 +24,8 @@
   </component>
   <component name="PhpInterpreters">
     <interpreters>
-      <interpreter id="cd8379b8-7aa1-4ff3-9c80-34f28749d7fc" name="Debian" home="\\wsl$\Debian/usr/bin/php" debugger_id="php.debugger.XDebug">
-        <remote_data INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="" INITIALIZED="false" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DISTRIBUTION_ID="Debian" />
+      <interpreter id="cd8379b8-7aa1-4ff3-9c80-34f28749d7fc" name="Debian" home="\\wsl$\Debian/usr/bin/php" false="false" debugger_id="php.debugger.XDebug">
+        <remote_data INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DISTRIBUTION_ID="Debian" />
       </interpreter>
     </interpreters>
   </component>
@@ -86,7 +86,7 @@
       </interpreter>
     </phpInfoCache>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3">
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStanOptionsConfiguration">

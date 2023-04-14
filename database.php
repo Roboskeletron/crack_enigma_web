@@ -19,6 +19,9 @@ class DatabaseProvider{
                 require("database/postgresql.php");
                 return  new Postgresql();
 
+            case "MYSQL":
+                require("database/Mysql.php");
+                return new Mysql();
             default:
                 die("Database provider couldn't find any implementation of ".self::$database);
         }
