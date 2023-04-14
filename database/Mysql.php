@@ -4,6 +4,7 @@ class Mysql implements IDatabase
 {
     private $database = null;
     private $connection_string = null;
+    private $error = null;
 
     public function __construct()
     {
@@ -38,9 +39,24 @@ class Mysql implements IDatabase
             $new_query = $new_query.' '.$word;
         }
 
+        $new_query = str_replace('"', '`', $new_query);
         $statement = $this->database->prepare($new_query);
 
-        $statement->execute($param_array);
+        for ($i = 0; $i < count($param_array); $i++){
+            $type = PDO::PARAM_STR;
+
+            if (gettype($param_array[$i]) == "integer"){
+                $type = PDO::PARAM_INT;
+            }
+
+            $statement->bindValue($i + 1, $param_array[$i], $type);
+        }
+
+        if (!$statement->execute())
+        {
+            $this->error = $statement->errorInfo();
+            return false;
+        }
         return $statement;
     }
 
@@ -64,8 +80,7 @@ class Mysql implements IDatabase
 
     public function get_error()
     {
-        return $this->database->errorInfo();
-        // TODO: Implement get_error() method.
+        return $this->error[2];
     }
 
     public function get_array($response)
