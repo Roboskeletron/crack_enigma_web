@@ -141,9 +141,9 @@ function check_query_result($result, $database): bool
 {
     if (!$result) {
         $error = $database->get_error();
-        if (str_contains($error, 'foreign key')) {
+        if (str_contains(strtolower($error), 'foreign')) {
             response_with_message(403, "user not found");
-        } else if (str_contains($error, "duplicate key")) {
+        } else if (str_contains(strtolower($error), "duplicate")) {
             response_with_message(400, "cyphertext with that name already exists");
         } else {
             response_with_message(500, "unknown error");
