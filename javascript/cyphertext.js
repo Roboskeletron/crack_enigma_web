@@ -382,17 +382,29 @@ function onInitialized() {
 
     switch (action) {
         case 'create': {
+            const reset = getCookie('resetCyphertext')
+
+            if (reset == 'true'){
+                deleteCookie('text')
+                deleteCookie('enigmaStatus')
+                saveEnigmaStatus()
+            }
+
             updateEnigmaStatus(getCookie('enigmaStatus'))
             updateInputText()
+
+            setCookie('resetCyphertext', 'false')
             break
         }
         case 'modify': {
+            setCookie('resetCyphertext', 'true')
             downloadCyphertext(params.id)
             actionButton.innerText = "Сохранить"
             deleteButton.style.display = 'block'
             break
         }
         case 'crack': {
+            setCookie('resetCyphertext', 'true')
             saveEnigmaStatus()
             downloadCyphertext(params.id)
             break
