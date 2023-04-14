@@ -532,6 +532,18 @@ function uploadCrack(code) {
     response.then(response => responseCallback(response))
 }
 
+function onResetStatusClicked(){
+    const json = '{"enigma status":{"rotor1":{"type":"I","position":"A"},"rotor2":{"type":"I","position":"A"},"rotor3":{"type":"I","position":"A"},"rotor4":{"type":"β","position":"A"},"reflector":{"type":"B"},"plugboard":[{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "},{"pin1":" ","pin2":" "}]}}'
+    updateEnigmaStatus(json)
+    setCookie('enigmaStatus', json)
+}
+
+function onResetTextClicked(){
+    deleteCookie('text')
+    input.value = ''
+    reevaluateText(() => {})
+}
+
 addRotorTypes(rotors)
 
 rotors.push(document.getElementById("rotor4"))
